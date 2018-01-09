@@ -1,14 +1,19 @@
-#胎心数据分析
+# 胎心数据分析
 
 ## 数据分析
 - `info` 表, 大多数为空或者全部为0或者1的字段: 
 - `jiasutimes` == 0, `jiansutimes` == 0, `wanjiansuzhenfu` == NaN, `wanjiansuzhouqi` == NaN, `wanjiansutimes` == 0
+- `info` 表，`id` 与`data` 表对应
 
 ## Requirements
 - python (2.7.10)
 - scikit-learn (0.17.1)
 - numpy (1.11.0+)
 - pandas (0.18.1)
+- tensorflow () / theano ()
+- keras ()
+- CUDA ()
+- cuDNN ()
 
 ## 问题
 
@@ -34,7 +39,8 @@
    git clone git@git.coding.net:noprom/fetal_heart_rate_monitoring.git
    ```
 
-2. `data/info.csv`和`data/data.csv`已经是导出好的全部特征文件
+2. `data/info.csv`和`data/data.csv`已经是导出好的全部特征文件,这两个文件数据损失严重，弃用
+
 
 3. `code/svm.py`为所有特征的`svm`, 目前正确率不是很高, 期待大家的调参结果
 
