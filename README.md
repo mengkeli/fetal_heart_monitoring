@@ -3,7 +3,7 @@
 ## 数据分析
 - `info` 表, 大多数为空或者全部为0或者1的字段: 
 - `jiasutimes` == 0, `jiansutimes` == 0, `wanjiansuzhenfu` == NaN, `wanjiansuzhouqi` == NaN, `wanjiansutimes` == 0
-- `info` 表，`id` 与`data` 表对应
+- `info` 表，`id` 与 `data` 表对应
 
 ## Requirements
 - python (2.7.10)
