@@ -3,7 +3,7 @@
 ## 数据分析
 - `info` 表, 大多数为空或者全部为0或者1的字段: 
 - `jiasutimes` == 0, `jiansutimes` == 0, `wanjiansuzhenfu` == NaN, `wanjiansuzhouqi` == NaN, `wanjiansutimes` == 0
-- `info` 表，`id` 与`data` 表对应
+- `info` 表，`id` 与 `data` 表对应
 
 ## Requirements
 - python (2.7.10)
@@ -40,7 +40,9 @@
    ```
 
 2. `data/info.csv`和`data/data.csv`已经是导出好的全部特征文件,这两个文件数据损失严重，弃用
-
+`data/data_gzip.csv`是从数据库导出的文件，作为实验数据
+`data/data_gzip.csv.filter`是`data/data_gzip.csv`过滤零值之后的数据
+data/data_gzip.csv.filter.mean`是`data/data_gzip.csv`讲零值用均值填充之后的数据
 
 3. `code/svm.py`为所有特征的`svm`, 目前正确率不是很高, 期待大家的调参结果
 
