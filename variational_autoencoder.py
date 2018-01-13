@@ -13,7 +13,7 @@ from keras.layers import Input, Dense, Lambda, Layer
 from keras.models import Model
 from keras import backend as K
 from keras import metrics
-from load_data import load_data
+from data_process import load_data
 
 batch_size = 100
 original_dim = 2402

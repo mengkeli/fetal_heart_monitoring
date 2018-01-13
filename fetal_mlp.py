@@ -12,7 +12,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
-from load_data import load_data
+from data_process import load_data
 
 batch_size = 128
 num_classes = 2 

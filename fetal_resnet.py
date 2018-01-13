@@ -20,7 +20,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
 from keras import backend as K
 from keras.models import Model
-from load_data import load_data
+from data_process import load_data
 # from keras.datasets import cifar10
 import numpy as np
 import os

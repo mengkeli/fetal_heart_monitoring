@@ -22,7 +22,7 @@ from keras.layers import Dense, Activation
 from keras.layers import SimpleRNN
 from keras import initializers
 from keras.optimizers import RMSprop
-from load_data import load_data
+from data_process import load_data
 
 batch_size = 32
 num_classes = 2

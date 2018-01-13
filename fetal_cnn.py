@@ -11,7 +11,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
-from load_data import load_data
+from data_process import load_data
 
 batch_size = 128
 num_classes = 2

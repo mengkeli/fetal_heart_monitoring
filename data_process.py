@@ -27,7 +27,6 @@ def filter_zero(data_file, out_file, zero_rate, length):
                 break
             values = line.split(',')
             zero_count = 0
-            cons_zero_cout = 0
             for i in np.arange(1, len(values) - 1):
                 if int(values[i]) != 0:
                     if cons_zero_count >= length:
@@ -42,7 +41,7 @@ def filter_zero(data_file, out_file, zero_rate, length):
             # print 'id: %s, zero count: %d' % (values[0], zero_count)
 
             # 0值缺失严重的, 忽略
-            if zero_count >= rate * 2400:
+            if zero_count >= zero_rate * 2400:
                 continue
 
             total_row += 1
@@ -66,7 +65,7 @@ def filter_zero(data_file, out_file, zero_rate, length):
             writer.write('\n')
 
         writer.close()
-        print 'transformation done. total_row: %d' % total_row
+        print 'filter at zero_rate = %d. total_row: %d' % zero_rate, total_row
 
 def load_data(path='./data/fetal.npz'):
     """Loads the fetal dataset.
