@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-#import the raw data from 'adviceData_haifu.csv' and 'adviceinfo_haifu'
-#to file 'data.csv' and 'info.csv'
+# import the raw data from 'adviceData_haifu.csv' and 'adviceinfo_haifu'
+# to file 'data.csv' and 'info.csv'
 import sys, MySQLdb, MySQLdb.cursors, json, func
 
 reload(sys)

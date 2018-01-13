@@ -65,8 +65,8 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
             writer.write('\n')
 
         writer.close()
-        print 'filter at zero_rate = %d.' % zero_rate
-        print 'total_row = %d.' % total_row
+        print('filter at zero_rate = %d.' % zero_rate)
+        print('total_row = %d.' % total_row)
 
 def load_data(path='./data/fetal.npz'):
     """Loads the fetal dataset.
