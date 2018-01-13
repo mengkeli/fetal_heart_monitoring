@@ -27,6 +27,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                 break
             values = line.split(',')
             zero_count = 0
+            cons_zero_count = 0
             for i in np.arange(1, len(values) - 1):
                 if int(values[i]) != 0:
                     if cons_zero_count >= length:
@@ -91,3 +92,5 @@ def load_data(path='./data/fetal.npz'):
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
 
+if __name__ == '__main__':
+    filter_zero('../data/data_gzip.csv', '../data/data_zero_filer_03.csv', 0.3, 50)
