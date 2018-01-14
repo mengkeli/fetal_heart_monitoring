@@ -28,11 +28,13 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
             values = line.split(',')
             zero_count = 0
             cons_zero_count = 0
+            bad_row = 0
             for i in np.arange(1, len(values) - 1):
                 if int(values[i]) != 0:
                     if cons_zero_count >= length:
                         cons_zero_count = 0
                         zero_count = 0
+                        bad_row += 1
                         continue
                     else:
                         cons_zero_count = 0
@@ -68,6 +70,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         writer.close()
         print('filter at zero_rate = %d.' % zero_rate)
         print('total_row = %d.' % total_row)
+        print('bad_row = %d.' % bad_row)
 
 def load_data(path='./data/fetal.npz'):
     """Loads the fetal dataset.
