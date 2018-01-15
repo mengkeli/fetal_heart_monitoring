@@ -4,6 +4,7 @@
 - `info` 表, 大多数为空或者全部为0或者1的字段: 
 - `jiasutimes` == 0, `jiansutimes` == 0, `wanjiansuzhenfu` == NaN, `wanjiansuzhouqi` == NaN, `wanjiansutimes` == 0
 - `info` 表，`id` 与 `data` 表对应
+- 统计得`nst_result` == 1，2，3，4 分别对应正常（18699），可疑（13368），异常（28），无法判读（85）
 
 ## Requirements
 - python (2.7.10)
@@ -43,7 +44,7 @@
 `data/data_gzip.csv`是从数据库导出的文件，作为实验数据，24360行
 `data/data_gzip.csv.filter`是`data/data_gzip.csv`过滤零值之后的数据
 `data/data_gzip.csv.filter.mean`是`data/data_gzip.csv`将零值用整体均值填充之后的数据
-`data_zero_filer_03_50.csv` 剔除零值超过30%的，连续零值超过50个，剩余21810条，bad_row = 2158， zero_row = 389
+`data_zero_filer_03_50.csv` 剔除零值超过30%的，连续零值超过50个，剩余22199条，bad_row = 2158， zero_row = 3
 
 
 3. `code/svm.py`为所有特征的`svm`, 目前正确率不是很高, 期待大家的调参结果

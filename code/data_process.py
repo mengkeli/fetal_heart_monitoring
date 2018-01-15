@@ -62,7 +62,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                     # 用相邻的均值替代0值
                     left_index = i
                     right_index = i
-                    while left_index >= 0 and int(values[left_index]) == 0:
+                    while left_index > 0 and int(values[left_index]) == 0:
                         left_index -= 1
                     while right_index < max_len - 1 and int(values[right_index]) == 0:
                         right_index += 1
@@ -78,6 +78,12 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         print('total_row = %d.' % total_row)
         print('bad_row = %d.' % bad_row)
         print('zero_row = %d.' % zero_row)
+
+def join_data_label(data_file= '../data/data_zero_03_50.csv', label_file = '../data/info.csv'):
+    data = pd.read_csv(data_file)
+    df = pd.read_csv('label_file')
+    label = df.loc[:,['id','nst_result']]
+    pd.merge(data, label, how = 'left', left_index = True)
 
 def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
     '''
