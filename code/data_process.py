@@ -81,31 +81,24 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
 
 def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='../data/info.csv'):
     data = pd.read_csv(data_file)
-    print('data origin shape:' + str(data.shape))
+    # print('data origin shape:' + str(data.shape))
 
     df = pd.read_csv(label_file)
     label = df.loc[:, ['id', 'nst_result']]
     data_label = pd.merge(data, label, how='left', left_index=True, left_on='id', right_on='id')
+
     # 把'异常型' 归入 '可疑型'
     data_label.loc[data_label['nst_result'] == 3, 'nst_result'] = 2
     # 剔除'无法判读'型
     data_label.loc[data_label['nst_result'] == 4, 'nst_result'] = np.nan
-    data_label.dropna(inplace = True)
+    data_label.dropna(inplace=True)
     data_label.drop('id', axis=1, inplace=True)
-    label = data_label['nst_result']
-    data_label.drop(['nst_result'], axis=1, inplace=True)
-    print('dataset shape:' + str(data_label.shape))
+    # label = data_label['nst_result']
+    # data_label.drop(['nst_result'], axis=1, inplace=True)
+    # print('dataset shape:' + str(data_label.shape))
 
-    np.savez('../data/fetal.npz', dataset=data_label, label=label)
+    np.savez('../data/fetal.npy', data_label)#, dataset=data_label, label=label)
     return
-
-# def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
-#     '''
-#     save the preprocessed data to .npz file
-#     '''
-#     data = np.loadtxt(data_file, delimeter = ',', skiprows = 1)
-#     np.savez('fetal.npz',a,b,c_array=c)
-#     return
 
 def load_data(path='../data/fetal.npz'):
     """Loads the fetal dataset.
@@ -118,14 +111,14 @@ def load_data(path='../data/fetal.npz'):
         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
     """
     f = np.load(path)
-    x, y = f['dataset'], f['label']
     # shuffle the dataset
-#    permutation = np.random.permutation(y.shape[0])
-#    shuffled_dataset = x[permutation, :, :]
-#    shuffled_label = y[permutation]
+    np.random.shuffle(f)
+    x, y = f[:, 0:-1], f[:, -1]
+    trainset_size = np.floor(f.shape[0] * 0.7)
+    # testset_size = f.shape[0] - trainset_size
+    x_train, y_train = x[ :trainset_size], y[ :trainset_size]
 
-    x_train, y_train = x[ :4000], y[ :4000]
-    x_test, y_test = x[4000 :5000], y[4000:5000]
+    x_test, y_test = x[trainset_size: ], y[trainset_size:]
     f.close()
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
