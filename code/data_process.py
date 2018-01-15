@@ -90,15 +90,16 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     data_label.loc[data_label['nst_result'] == 3, 'nst_result'] = 2
     # 剔除'无法判读'型
     data_label.loc[data_label['nst_result'] == 4, 'nst_result'] = np.nan
+    data_label.loc[data_label['nst_result'] == 0, 'nst_result'] = np.nan
     data_label.dropna(inplace=True)
     data_label.drop('id', axis=1, inplace=True)
     # label = data_label['nst_result']
     # data_label.drop(['nst_result'], axis=1, inplace=True)
     data_label.values[:,:]
-    np.save('../data/fetal.npy', data_label)#, dataset=data_label, label=label)
+    np.save('../data/fetal.npy', data_label)
     return
 
-def load_data(path='../data/fetal.npz'):
+def load_data(path='../data/fetal.npy'):
     """Loads the fetal dataset.
 
     # Arguments
@@ -111,12 +112,11 @@ def load_data(path='../data/fetal.npz'):
     f = np.load(path)
     # shuffle the dataset
     np.random.shuffle(f)
-    x, y = f[:, 0:-1], f[:, -1]
-    trainset_size = np.floor(f.shape[0] * 0.7)
-    # testset_size = f.shape[0] - trainset_size
-    x_train, y_train = x[ :trainset_size], y[ :trainset_size]
 
-    x_test, y_test = x[trainset_size: ], y[trainset_size:]
+    x, y = f[:, 0:-1], f[:, -1]
+    trainset_size = int(np.floor(f.shape[0] * 0.7))
+    x_train, y_train = x[ :trainset_size], y[ :trainset_size]
+    x_test, y_test = x[trainset_size:], y[trainset_size:]
     f.close()
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
