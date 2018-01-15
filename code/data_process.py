@@ -17,7 +17,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
     print('zero_rate = %f' % zero_rate)
     print('zero_length = %d' % length)
     with open(data_file, 'r') as f:
-        line = f.readline()
+        line = f.readline().rstrip()
         writer.write(line)
 
         total_row = 0
@@ -69,13 +69,12 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
-            #writer.write('\n')
+            writer.write('\n')
 
         writer.close()
         print('origin_row = %d.' % origin_row)
         print('total_row = %d.' % total_row)
         print('bad_row = %d.' % bad_row)
-
 
 def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
     '''
