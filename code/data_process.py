@@ -80,18 +80,32 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         print('zero_row = %d.' % zero_row)
 
 def join_data_label(data_file= '../data/data_zero_03_50.csv', label_file = '../data/info.csv'):
+    data_file = '../data/data_zero_filer_03_50.csv'
+    label_file = '../data/info.csv'
     data = pd.read_csv(data_file)
-    df = pd.read_csv('label_file')
-    label = df.loc[:,['id','nst_result']]
-    pd.merge(data, label, how = 'left', left_index = True)
-
-def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
-    '''
-    save the preprocessed data to .npz file
-    '''
-    data = np.loadtxt(data_file, delimeter = ',', skiprows = 1) 
-    np.savez('fetal.npz',a,b,c_array=c)  
+    print(data.shape)
+    df = pd.read_csv(label_file)
+    label = df.loc[:, ['id', 'nst_result']]
+    data_label = pd.merge(data, label, how='left', left_index=True, left_on='id', right_on='id')
+    # 把'异常型' 归入 '可疑型'
+    data_label.loc[data_label['nst_result'] == 3, 'nst_result'] = 2
+    # 剔除'无法判读'型
+    data_label.loc[data_label['nst_result'] == 4, 'nst_result'] = np.nan
+    data_label.dropna()
+    print(data_label.shape)
+    data_label.drop('id', axis=1, inplace=True)
+    label = data_label['nst_result']
+    data = data_label.drop(['nst_result'], axis=1, inplace=True)
+    np.savez('../data/fetal.npz', dataset=data, label=label)
     return
+
+# def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
+#     '''
+#     save the preprocessed data to .npz file
+#     '''
+#     data = np.loadtxt(data_file, delimeter = ',', skiprows = 1)
+#     np.savez('fetal.npz',a,b,c_array=c)
+#     return
 
 def load_data(path='../data/fetal.npz'):
     """Loads the fetal dataset.

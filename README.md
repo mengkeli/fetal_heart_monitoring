@@ -4,7 +4,7 @@
 - `info` 表, 大多数为空或者全部为0或者1的字段: 
 - `jiasutimes` == 0, `jiansutimes` == 0, `wanjiansuzhenfu` == NaN, `wanjiansuzhouqi` == NaN, `wanjiansutimes` == 0
 - `info` 表，`id` 与 `data` 表对应
-- 统计得`nst_result` == 1，2，3，4 分别对应正常（18699），可疑（13368），异常（28），无法判读（85）
+- 统计得`nst_result` == 1，2，3，4 分别对应正常（18699/13309），可疑（13368/8867），异常（28/15），无法判读（85/6）
 
 ## Requirements
 - python (2.7.10)
