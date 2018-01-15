@@ -80,8 +80,6 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         print('zero_row = %d.' % zero_row)
 
 def join_data_label(data_file= '../data/data_zero_03_50.csv', label_file = '../data/info.csv'):
-    data_file = '../data/data_zero_filer_03_50.csv'
-    label_file = '../data/info.csv'
     data = pd.read_csv(data_file)
     print(data.shape)
     df = pd.read_csv(label_file)
@@ -131,4 +129,4 @@ def load_data(path='../data/fetal.npz'):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    filter_zero('../data/data_gzip.csv', '../data/data_zero_filer_03_50.csv', 0.3, 50)
+    join_data_label()
