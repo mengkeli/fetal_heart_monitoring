@@ -17,7 +17,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
     print('zero_rate = %f' % zero_rate)
     print('zero_length = %d' % length)
     with open(data_file, 'r') as f:
-        line = f.readline().rstrip()
+        line = f.readline()
         writer.write(line)
 
         total_row = 0
@@ -25,7 +25,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         zero_row = 0
         origin_row = 0
         while True:
-            line = f.readline()
+            line = f.readline().rstrip()
             # print line
             if not line:
                 break
@@ -71,7 +71,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
-           # writer.write('\n')
+            writer.write('\n')
 
         writer.close()
         print('origin_row = %d.' % origin_row)
