@@ -81,7 +81,8 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
 
 def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='../data/info.csv'):
     data = pd.read_csv(data_file)
-    print('data origin shape:' + data.shape)
+    print('data origin shape:' + str(data.shape))
+
     df = pd.read_csv(label_file)
     label = df.loc[:, ['id', 'nst_result']]
     data_label = pd.merge(data, label, how='left', left_index=True, left_on='id', right_on='id')
@@ -94,6 +95,7 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     label = data_label['nst_result']
     data_label.drop(['nst_result'], axis=1, inplace=True)
     print('dataset shape:' + str(data_label.shape))
+
     np.savez('../data/fetal.npz', dataset=data_label, label=label)
     return
 
