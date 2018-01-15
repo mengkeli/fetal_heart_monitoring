@@ -38,11 +38,11 @@ def plot(list, savename):
     plt.savefig(base.plot_dir + savename)
 
 
-original_list = func.load_files(base.data_dir)
-filter_zero_list = func.load_files_filter_zero(base.data_dir)
-mean_per_second_list = func.load_files_mean_per_second(base.data_dir)
-mean_per_second_filter_zero_list = func.load_files_mean_per_second_filter_zero(base.data_dir)
+# original_list = func.load_files(base.data_dir)
+# filter_zero_list = func.load_files_filter_zero(base.data_dir)
+# mean_per_second_list = func.load_files_mean_per_second(base.data_dir)
+# mean_per_second_filter_zero_list = func.load_files_mean_per_second_filter_zero(base.data_dir)
 # plot(original_list, 'original_plot.pdf')
 # plot(filter_zero_list, 'filter_zero_plot.pdf')
 # plot(mean_per_second_list, 'mean_per_second_plot.pdf')
-plot(mean_per_second_filter_zero_list, 'mean_per_second_filter_zero_plot.pdf')
+# plot(mean_per_second_filter_zero_list, 'mean_per_second_filter_zero_plot.pdf')
