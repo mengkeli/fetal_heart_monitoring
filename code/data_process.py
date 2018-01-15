@@ -79,7 +79,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         print('bad_row = %d.' % bad_row)
         print('zero_row = %d.' % zero_row)
 
-def join_data_label(data_file= '../data/data_zero_03_50.csv', label_file = '../data/info.csv'):
+def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='../data/info.csv'):
     data = pd.read_csv(data_file)
     print(data.shape)
     df = pd.read_csv(label_file)
@@ -90,8 +90,8 @@ def join_data_label(data_file= '../data/data_zero_03_50.csv', label_file = '../d
     # 剔除'无法判读'型
     data_label.loc[data_label['nst_result'] == 4, 'nst_result'] = np.nan
     data_label.dropna()
-    print(data_label.shape)
     data_label.drop('id', axis=1, inplace=True)
+    print(data_label.shape)
     label = data_label['nst_result']
     data = data_label.drop(['nst_result'], axis=1, inplace=True)
     np.savez('../data/fetal.npz', dataset=data, label=label)
@@ -129,4 +129,5 @@ def load_data(path='../data/fetal.npz'):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    join_data_label()
+    join_data_label('../data/data_zero_filter_03_50.csv', '../data/info.csv')
+    #filter_zero('../data/data_gzip.csv', '../data/data_zero_filter_03_50.csv', 0.3, 50)
