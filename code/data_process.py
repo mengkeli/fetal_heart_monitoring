@@ -14,38 +14,45 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
     '''
     writer = open(out_file, 'w+')
     zero_writer = open(out_file + '.zero_count', 'w+')
-
+    print('zero_rate = %f' % zero_rate)
+    print('zero_length = %d' % length)
     with open(data_file, 'r') as f:
         line = f.readline()
         writer.write(line)
 
         total_row = 0
+        bad_row = 0
+        origin_row = 0
         while True:
             line = f.readline()
             # print line
             if not line:
                 break
+            origin_row += 1
             values = line.split(',')
             zero_count = 0
+            cons_zero_count = 0
+            bad_row_flag = False
             for i in np.arange(1, len(values) - 1):
-                if int(values[i]) != 0:
-                    if cons_zero_count >= length:
-                        cons_zero_count = 0
-                        zero_count = 0
-                        continue
+                if int(values[i]) == 0:
+                    zero_count += 1
+                    cons_zero_count += 1
+                else:
+                    if cons_zero_count > length:
+                        bad_row_flag = True
                     else:
                         cons_zero_count = 0
-                else:
-                    zero_count += 1
             zero_writer.write('%s,%d\n' % (values[0], zero_count))
-            # print 'id: %s, zero count: %d' % (values[0], zero_count)
+            # 连续0值超过length的, 剔除
+            if bad_row_flag == True:
+                bad_row += 1
+                continue;
 
-            # 0值缺失严重的, 忽略
+            # 0值缺失严重的, 剔除
             if zero_count >= zero_rate * 2400:
                 continue
-
+  
             total_row += 1
-            # 找出0的个数小于300的
             writer.write(values[0])
             max_len = len(values)
             for i in np.arange(1, max_len):
@@ -62,13 +69,23 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
-            writer.write('\n')
+            #writer.write('\n')
 
         writer.close()
-        print('filter at zero_rate = %d.' % zero_rate)
+        print('origin_row = %d.' % origin_row)
         print('total_row = %d.' % total_row)
+        print('bad_row = %d.' % bad_row)
 
-def load_data(path='./data/fetal.npz'):
+
+def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
+    '''
+    save the preprocessed data to .npz file
+    '''
+    data = np.loadtxt(data_file, delimeter = ',', skiprows = 1) 
+    np.savez('fetal.npz',a,b,c_array=c)  
+    return
+
+def load_data(path='../data/fetal.npz'):
     """Loads the fetal dataset.
 
     # Arguments
@@ -91,3 +108,5 @@ def load_data(path='./data/fetal.npz'):
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
 
+if __name__ == '__main__':
+    filter_zero('../data/data_gzip.csv', '../data/data_zero_filer_03_50.csv', 0.3, 50)
