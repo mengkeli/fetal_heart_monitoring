@@ -95,7 +95,7 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     # label = data_label['nst_result']
     # data_label.drop(['nst_result'], axis=1, inplace=True)
 
-    np.savez('../data/fetal.npy', data_label)#, dataset=data_label, label=label)
+    np.save('../data/fetal.npy', data_label)#, dataset=data_label, label=label)
     return
 
 def load_data(path='../data/fetal.npz'):
