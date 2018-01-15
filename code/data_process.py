@@ -22,6 +22,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
 
         total_row = 0
         bad_row = 0
+        zero_row = 0
         origin_row = 0
         while True:
             line = f.readline()
@@ -50,6 +51,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
 
             # 0值缺失严重的, 剔除
             if zero_count >= zero_rate * 2400:
+                zero_row += 1
                 continue
   
             total_row += 1
@@ -69,12 +71,13 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
-            writer.write('\n')
+           # writer.write('\n')
 
         writer.close()
         print('origin_row = %d.' % origin_row)
         print('total_row = %d.' % total_row)
         print('bad_row = %d.' % bad_row)
+        print('zero_row = %d.' % zero_row)
 
 def sava_data(data_file='../data/data_zero_filer_03_50.csv'):
     '''
