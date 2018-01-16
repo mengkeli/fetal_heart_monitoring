@@ -117,7 +117,6 @@ def load_data(path='../data/fetal.npy'):
     trainset_size = int(np.floor(f.shape[0] * 0.7))
     x_train, y_train = x[ :trainset_size], y[ :trainset_size]
     x_test, y_test = x[trainset_size:], y[trainset_size:]
-    f.close()
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
 
