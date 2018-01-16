@@ -92,6 +92,9 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     data_label.loc[data_label['nst_result'] == 4, 'nst_result'] = np.nan
     data_label.loc[data_label['nst_result'] == 0, 'nst_result'] = np.nan
     data_label.dropna(inplace=True)
+    # 将1，2类，转化为0、1类
+    data_label.loc[data_label['nst_result'] == 1, 'nst_result'] = 0
+    data_label.loc[data_label['nst_result'] == 2, 'nst_result'] = 1
     data_label.drop('id', axis=1, inplace=True)
     # label = data_label['nst_result']
     # data_label.drop(['nst_result'], axis=1, inplace=True)
