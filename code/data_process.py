@@ -100,12 +100,29 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     data_label.loc[data_label['nst_result'] == 2, 'nst_result'] = 1
     data_label.drop('id', axis=1, inplace=True)
 
+    # 规范数据，合理数据范围在60~210
+    data_label.values[:, :]
+    data = data_label[:, 0:-1]
+    data_label[data_label[:, 0:-1] < 60] = 60
+    data_label[data_label[:, 0:-1] > 210] = 210
     # label = data_label['nst_result']
     # data_label.drop(['nst_result'], axis=1, inplace=True)
 
     data_label.values[:,:]
     np.save('../data/fetal.npy', data_label)
     return
+
+def generate_imgdata(path='../data/fetal.npy'):
+    '''
+    生成与时间序列对应的图像数据 1 * 2402 * 200 * 2402
+    :param path: 
+    :return: 
+    '''
+    f = np.load(path)
+    x, y = f[:, 0:-1], f[:, -1]
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            x_img =
 
 def load_data(path='../data/fetal.npy'):
     """Loads the fetal dataset.
@@ -122,7 +139,7 @@ def load_data(path='../data/fetal.npy'):
     np.random.shuffle(f)
 
     x, y = f[:, 0:-1], f[:, -1]
-    trainset_size = int(np.floor(f.shape[0] * 0.7))
+    trainset_size = int(np.floor(f.shape[0] * 0.7)) # 15533, 6658
     x_train, y_train = x[ :trainset_size], y[ :trainset_size]
     x_test, y_test = x[trainset_size:], y[trainset_size:]
     f.close()
