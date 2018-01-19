@@ -113,19 +113,19 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     np.save('../data/fetal.npy', data_label)
     return
 
-def generate_imgdata(path='../data/fetal.npy'):
-    '''
-    生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
-    :param path: 
-    :return: 
-    '''
-    f = np.load(path)
-    x, y = f[:, 0:-1], f[:, -1]
-    for i in range(x.shape[0]):
-        for j in range(x.shape[1]):
-            #x_img =
-
-    return
+# def generate_imgdata(path='../data/fetal.npy'):
+#     '''
+#     生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
+#     :param path:
+#     :return:
+#     '''
+#     f = np.load(path)
+#     x, y = f[:, 0:-1], f[:, -1]
+#     for i in range(x.shape[0]):
+#         for j in range(x.shape[1]):
+#             #x_img =
+#
+#     return
 
 def transfer_fft(path='../data/fetal.npy'):
     '''
