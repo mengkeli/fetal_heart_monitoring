@@ -18,10 +18,11 @@ num_classes = 2
 epochs = 30
 
 # input image dimensions
-img_rows, img_cols = 2402, 1
+image_file = '../data/fetal_image.npy'
+img_rows, img_cols = 150, 2402
 
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = load_data()
+(x_train, y_train), (x_test, y_test) = load_data(image_file)
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -45,15 +46,15 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 1),
+model.add(Conv2D(32, kernel_size=(10, 10),
                  activation='relu',
                  input_shape=input_shape))
-model.add(Conv2D(64, (3, 1), activation='relu'))
-model.add(MaxPooling2D(pool_size=(4, 1)))
-model.add(Dropout(0.25))
+model.add(Conv2D(64, (10, 10), activation='relu'))
+model.add(MaxPooling2D(pool_size=(4, 4)))
+#model.add(Dropout(0.25))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))
 
 model.compile(loss=keras.losses.binary_crossentropy,

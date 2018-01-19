@@ -91,8 +91,8 @@ def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
 
 def join_data_label(zero_filter_file, label_file):
     data = pd.read_csv(zero_filter_file)
-
     df = pd.read_csv(label_file)
+
     label = df.loc[:, ['id', 'nst_result']]
     data_label = pd.merge(data, label, how='left', left_index=True, left_on='id', right_on='id')
 
@@ -111,14 +111,13 @@ def join_data_label(zero_filter_file, label_file):
     data_label.drop('id', axis=1, inplace=True)
 
     # 规范数据，合理数据范围在61~210(150个值)
-    data_label.values[:, :]
-    data_label[data_label[:, 0:-1] < 61] = 61
-    data_label[data_label[:, 0:-1] > 210] = 210
-    # label = data_label['nst_result']
-    # data_label.drop(['nst_result'], axis=1, inplace=True)
+    label = data_label.loc[:, ['nst_result']]
+    data = data_label.drop('nst_result', axis=1)
+    data[data < 60] = 60
+    data[data >= 210] = 209
+    data['nst_result'] = label
 
-    data_label.values[:,:]
-    np.save(series_file, data_label)
+    np.save(series_file, data.values[:,:])
     return
 
 def generate_imgdata(series_file):
@@ -128,25 +127,24 @@ def generate_imgdata(series_file):
     :return:
     '''
     f = np.load(series_file)
-    x, y = f[:, 0:-1], f[:, -1]
+    f = f.astype('uint8')
+    x, y = f[:, 0:-1], f[:, -1:]
     num_data = x.shape[0]
     cols = x.shape[1]
     rows = 210 - 60  # 图像的y轴刻度
-    data_mat = np.zeros((num_data, rows * cols), dtype=np.int8)
+    data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
+
     for i in range(num_data):
         if (i % 1000 == 0):
-            print('i:%s' % i)
-        image_mat = np.zeros((rows, cols), dtype=np.int8)
+            print('i = %s' % i)
+        image_mat = np.zeros((rows, cols), dtype=np.uint8)
         for j in range(cols):
-            heart_rate = x[i][j]-60
-            image_mat.iloc[heart_rate][j] = 1
-            # print('i:%s, j:%s, data[i][j]-60:%s' % (i, j, data.iloc[i][j] - 60))
-        image_mat_reshape = np.reshape(image_mat, -1)
-        data_mat[i] = image_mat_reshape
+            image_mat[x[i][j]-60][j] = 1
+        data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
     data_label_mat = np.hstack([data_mat, y])
    # data_mat_df = pd.DataFrame(data_label_mat)
-    np.save(image_file, data_label_mat)
 
+    np.save(image_file, data_label_mat)
     return
 
 def transfer_fft(series_file):
@@ -160,7 +158,7 @@ def transfer_fft(series_file):
     y = f[:, 0:-1]
     yy = fft()
 
-def load_data(path='../data/fetal.npy'):
+def load_data(file = series_file):
     """Loads the fetal dataset.
 
     # Arguments
@@ -170,7 +168,7 @@ def load_data(path='../data/fetal.npy'):
     # Returns
         Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
     """
-    f = np.load(path)
+    f = np.load(file)
     # shuffle the dataset
     np.random.shuffle(f)
 
@@ -183,4 +181,4 @@ def load_data(path='../data/fetal.npy'):
 
 if __name__ == '__main__':
     join_data_label(zero_filter_file, label_file)
-    #filter_zero(0.3, 50)
+    #filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
