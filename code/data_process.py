@@ -68,7 +68,7 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
                     while right_index < max_len - 1 and int(values[right_index]) == 0:
                         right_index += 1
 
-                    val = (int(values[left_index]) + int(values[right_index])) / 2
+                    val = np.floor_divide(int(values[left_index]) + int(values[right_index]), 2)
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
@@ -104,7 +104,7 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     # 规范数据，合理数据范围在60~210
     data_label.values[:, :]
     data = data_label[:, 0:-1]
-    data_label[data_label[:, 0:-1] < 60] = 60
+    data_label[data_label[:, 0:-1] < 61] = 61
     data_label[data_label[:, 0:-1] > 210] = 210
     # label = data_label['nst_result']
     # data_label.drop(['nst_result'], axis=1, inplace=True)
@@ -113,19 +113,33 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     np.save('../data/fetal.npy', data_label)
     return
 
-# def generate_imgdata(path='../data/fetal.npy'):
-#     '''
-#     生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
-#     :param path:
-#     :return:
-#     '''
-#     f = np.load(path)
-#     x, y = f[:, 0:-1], f[:, -1]
-#     for i in range(x.shape[0]):
-#         for j in range(x.shape[1]):
-#             #x_img =
-#
-#     return
+def generate_imgdata(path='../data/fetal.npy'):
+    '''
+    生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
+    :param path:
+    :return:
+    '''
+    f = np.load(path)
+    x, y = f[:, 0:-1], f[:, -1]
+    num_data = x.shape[0]
+    cols = x.shape[1]
+    rows = 210 - 60  # 图像的y轴刻度
+    data_mat = np.zeros((num_data, rows * cols), dtype=np.int8)
+    for i in range(num_data):
+        if (i % 1000 == 0):
+            print('i:%s' % i)
+        image_mat = np.zeros((rows, cols), dtype=np.int8)
+        for j in range(cols):
+            heart_rate = x[i][j]-60
+            image_mat.iloc[heart_rate][j] = 1
+            # print('i:%s, j:%s, data[i][j]-60:%s' % (i, j, data.iloc[i][j] - 60))
+        image_mat_reshape = np.reshape(image_mat, -1)
+        data_mat[i] = image_mat_reshape
+    data_label_mat = np.hstack([data_mat, y])
+   # data_mat_df = pd.DataFrame(data_label_mat)
+    np.save('../data/fetal_image.npy', data_label_mat)
+
+    return
 
 def transfer_fft(path='../data/fetal.npy'):
     '''
@@ -160,5 +174,5 @@ def load_data(path='../data/fetal.npy'):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    join_data_label('../data/data_zero_filter_03_50.csv', '../data/info.csv')
-    #filter_zero('../data/data_gzip.csv', '../data/data_zero_filter_03_50.csv', 0.3, 50)
+    #join_data_label('../data/data_zero_filter_03_50.csv', '../data/info.csv')
+    filter_zero('../data/data_gzip.csv', '../data/data_zero_filter_03_50.csv', 0.3, 50)
