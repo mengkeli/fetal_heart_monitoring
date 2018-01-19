@@ -112,7 +112,6 @@ def join_data_label(zero_filter_file, label_file):
 
     # 规范数据，合理数据范围在61~210(150个值)
     data_label.values[:, :]
-    data = data_label[:, 0:-1]
     data_label[data_label[:, 0:-1] < 61] = 61
     data_label[data_label[:, 0:-1] > 210] = 210
     # label = data_label['nst_result']
@@ -183,5 +182,5 @@ def load_data(path='../data/fetal.npy'):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    join_data_label()
+    join_data_label(zero_filter_file, label_file)
     #filter_zero(0.3, 50)
