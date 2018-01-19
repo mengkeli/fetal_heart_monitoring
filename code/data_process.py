@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import numpy as np
 import pandas as pd
+from scipy.fftpack import fft,ifft
 import random
 
 def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
@@ -114,7 +115,7 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
 
 def generate_imgdata(path='../data/fetal.npy'):
     '''
-    生成与时间序列对应的图像数据 1 * 2402 * 200 * 2402
+    生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
     :param path: 
     :return: 
     '''
@@ -122,7 +123,20 @@ def generate_imgdata(path='../data/fetal.npy'):
     x, y = f[:, 0:-1], f[:, -1]
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
-            x_img =
+            #x_img =
+
+    return
+
+def transfer_fft(path='../data/fetal.npy'):
+    '''
+    对波形图像进行傅里叶变换
+    :param path: 
+    :return: 
+    '''
+    f = np.load(path)
+    x = np.linspace(0, 1, 2402)
+    y = f[:, 0:-1]
+    yy = fft()
 
 def load_data(path='../data/fetal.npy'):
     """Loads the fetal dataset.
