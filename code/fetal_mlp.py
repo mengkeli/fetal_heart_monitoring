@@ -9,17 +9,18 @@ Gets to 98.40% test accuracy after 20 epochs
 from __future__ import print_function
 
 import keras
+import data_process
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
-from data_process import load_data
+
 
 batch_size = 128
 num_classes = 2 
 epochs = 20
 
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = load_data()
+(x_train, y_train), (x_test, y_test) = data_process.load_data()
 
 x_train = x_train.astype('int32')
 x_test = x_test.astype('int32')

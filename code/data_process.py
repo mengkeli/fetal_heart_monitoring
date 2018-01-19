@@ -116,6 +116,7 @@ def join_data_label(zero_filter_file, label_file):
     data[data < 60] = 60
     data[data >= 210] = 209
     data['nst_result'] = label
+    data = data.astype('uint8')
 
     np.save(series_file, data.values[:,:])
     return
@@ -127,7 +128,6 @@ def generate_imgdata(series_file):
     :return:
     '''
     f = np.load(series_file)
-    f = f.astype('uint8')
     x, y = f[:, 0:-1], f[:, -1:]
     num_data = x.shape[0]
     cols = x.shape[1]
