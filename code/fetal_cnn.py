@@ -15,7 +15,7 @@ from data_process import load_data
 
 batch_size = 128
 num_classes = 2
-epochs = 12
+epochs = 30
 
 # input image dimensions
 img_rows, img_cols = 2402, 1
