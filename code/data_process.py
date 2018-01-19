@@ -2,22 +2,31 @@
 import numpy as np
 import pandas as pd
 from scipy.fftpack import fft,ifft
-import random
 
-def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
+data_path = '../data/'
+
+raw_data_file = data_path + 'data_gzip.csv'
+zero_filter_file = data_path + 'data_zero_filter_03_50.csv'
+label_file = data_path + 'info.csv'
+
+series_file = data_path + 'fetal_series.npy'
+image_file = data_path + 'fetal_image.npy'
+fft_file = data_path + 'fetal_fft.npy'
+
+def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
     '''
     对于0值的点, 使用左右的平均值做为测量值
-    :param data_file:
-    :param out_file:
+    :param raw_data_file:
+    :param zero_filter_file:
     :zero_rate: 0.3
     :param length: the length of consistent zero, eg:50, 100
     :return:
     '''
-    writer = open(out_file, 'w+')
-    zero_writer = open(out_file + '.zero_count', 'w+')
+    writer = open(zero_filter_file, 'w+')
+    zero_writer = open(zero_filter_file + '.zero_count', 'w+')
     print('zero_rate = %f' % zero_rate)
     print('zero_length = %d' % length)
-    with open(data_file, 'r') as f:
+    with open(raw_data_file, 'r') as f:
         line = f.readline()
         writer.write(line)
 
@@ -80,8 +89,8 @@ def filter_zero(data_file, out_file, zero_rate = 0.3, length = 100):
         print('bad_row = %d.' % bad_row)
         print('zero_row = %d.' % zero_row)
 
-def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='../data/info.csv'):
-    data = pd.read_csv(data_file)
+def join_data_label(zero_filter_file, label_file):
+    data = pd.read_csv(zero_filter_file)
 
     df = pd.read_csv(label_file)
     label = df.loc[:, ['id', 'nst_result']]
@@ -101,7 +110,7 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     data_label.loc[data_label['nst_result'] == 2, 'nst_result'] = 1
     data_label.drop('id', axis=1, inplace=True)
 
-    # 规范数据，合理数据范围在60~210
+    # 规范数据，合理数据范围在61~210(150个值)
     data_label.values[:, :]
     data = data_label[:, 0:-1]
     data_label[data_label[:, 0:-1] < 61] = 61
@@ -110,16 +119,16 @@ def join_data_label(data_file='../data/data_zero_filter_03_50.csv', label_file='
     # data_label.drop(['nst_result'], axis=1, inplace=True)
 
     data_label.values[:,:]
-    np.save('../data/fetal.npy', data_label)
+    np.save(series_file, data_label)
     return
 
-def generate_imgdata(path='../data/fetal.npy'):
+def generate_imgdata(series_file):
     '''
     生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
     :param path:
     :return:
     '''
-    f = np.load(path)
+    f = np.load(series_file)
     x, y = f[:, 0:-1], f[:, -1]
     num_data = x.shape[0]
     cols = x.shape[1]
@@ -137,17 +146,17 @@ def generate_imgdata(path='../data/fetal.npy'):
         data_mat[i] = image_mat_reshape
     data_label_mat = np.hstack([data_mat, y])
    # data_mat_df = pd.DataFrame(data_label_mat)
-    np.save('../data/fetal_image.npy', data_label_mat)
+    np.save(image_file, data_label_mat)
 
     return
 
-def transfer_fft(path='../data/fetal.npy'):
+def transfer_fft(series_file):
     '''
     对波形图像进行傅里叶变换
     :param path: 
     :return: 
     '''
-    f = np.load(path)
+    f = np.load(series_file)
     x = np.linspace(0, 1, 2402)
     y = f[:, 0:-1]
     yy = fft()
@@ -174,5 +183,5 @@ def load_data(path='../data/fetal.npy'):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    #join_data_label('../data/data_zero_filter_03_50.csv', '../data/info.csv')
-    filter_zero('../data/data_gzip.csv', '../data/data_zero_filter_03_50.csv', 0.3, 50)
+    join_data_label()
+    #filter_zero(0.3, 50)
