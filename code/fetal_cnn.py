@@ -15,7 +15,7 @@ from data_process import load_data
 
 batch_size = 128
 num_classes = 2
-epochs = 30
+epochs = 10
 
 # input image dimensions
 image_file = '../data/fetal_image.npy'
