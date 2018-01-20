@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sn
 from scipy.fftpack import fft,ifft
 
 data_path = '../data/'
@@ -154,9 +156,39 @@ def transfer_fft(series_file):
     :return: 
     '''
     f = np.load(series_file)
-    x = np.linspace(0, 1, 2402)
+    # 采样点选择100个，因为设置的信号频率分量最高为600赫兹，根据采样定理知采样频率要大于信号频率2倍（一秒内有2个采样点）
+    x = np.linspace(0, 1, 100)
     y = f[:, 0:-1]
-    yy = fft()
+    # 快速傅里叶变换
+    yy = fft(y)
+    yreal = yy.real  # 获取实数部分
+    yimag = yy.imag  # 获取虚数部分
+
+    yf = abs(fft(y))  # 取绝对值
+    yf1 = abs(fft(y)) / len(x)  # 归一化处理
+    yf2 = yf1[range(int(len(x) / 2))]  # 由于对称性，只取一半区间
+
+    xf = np.arange(len(y))  # 频率
+    xf1 = xf
+    xf2 = xf[range(int(len(x) / 2))]  # 取一半区间
+
+    plt.subplot(221)
+    plt.plot(x[0:50], y[0:50])
+    plt.title('Original wave')
+
+    plt.subplot(222)
+    plt.plot(xf, yf, 'r')
+    plt.title('FFT of Mixed wave(two sides frequency range)', fontsize=7, color='#7A378B')  # 注意这里的颜色可以查询颜色代码表
+
+    plt.subplot(223)
+    plt.plot(xf1, yf1, 'g')
+    plt.title('FFT of Mixed wave(normalization)', fontsize=9, color='r')
+
+    plt.subplot(224)
+    plt.plot(xf2, yf2, 'b')
+    plt.title('FFT of Mixed wave)', fontsize=10, color='#F08080')
+
+    plt.show()
 
 def load_data(file = series_file):
     """Loads the fetal dataset.
@@ -181,4 +213,5 @@ def load_data(file = series_file):
 
 if __name__ == '__main__':
     join_data_label(zero_filter_file, label_file)
-    #filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
+    # generate_imgdata(series_file)
+    # filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
