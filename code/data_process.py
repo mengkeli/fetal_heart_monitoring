@@ -212,6 +212,7 @@ def load_data(file = series_file):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    join_data_label(zero_filter_file, label_file)
+    filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
+    # join_data_label(zero_filter_file, label_file)
     # generate_imgdata(series_file)
-    # filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
+
