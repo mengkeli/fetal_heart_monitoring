@@ -12,7 +12,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
-from data_process import load_data
 
 batch_size = 128
 num_classes = 2
@@ -22,7 +21,7 @@ epochs = 10
 img_rows, img_cols = 150, 2402
 
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = data_process.load_data(image_file)
+(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
