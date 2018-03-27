@@ -17,7 +17,7 @@ import numpy as np
 
 batch_size = 128
 num_classes = 2
-epochs = 10
+epochs = 20
 
 # input image dimensions
 img_rows, img_cols = 150, 2402
@@ -53,7 +53,7 @@ model = Sequential()
 '''
 
 model.add(Conv2D(3, kernel_size=(10, 20),
-                 strides=(2, 4),
+                 strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
 # model.add(Conv2D(64, (10, 10), activation='relu'))
@@ -97,4 +97,3 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-print('score:', score)
