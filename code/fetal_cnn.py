@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
+import numpy as np
 
 batch_size = 128
 num_classes = 2
@@ -34,8 +35,7 @@ else:
 
 x_train = x_train.astype('int32')
 x_test = x_test.astype('int32')
-#x_train /= 255
-#x_test /= 255
+
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
@@ -44,27 +44,66 @@ print(x_test.shape[0], 'test samples')
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
+'''
+step1 : 选择模型
+'''
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(10, 10),
+
+'''
+step 2 : 构建网络层
+'''
+model.add(Conv2D(3, kernel_size=(10, 10),
+                 strides=(1, 2),
                  activation='relu',
                  input_shape=input_shape))
-model.add(Conv2D(64, (10, 10), activation='relu'))
+# model.add(Conv2D(64, (10, 10), activation='relu'))
 model.add(MaxPooling2D(pool_size=(4, 4)))
-#model.add(Dropout(0.25))
+# model.add(Dropout(0.25))
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-#model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='softmax'))
 
+# model.add(Dense(128, activation='relu')) # 隐藏节点128个
+# model.add(Dropout(0.2))
+model.add(Dense(num_classes, activation='softmax')) # 最后一层，输出结果是2个类别
+
+'''
+step 3 : 编译
+可以设置SGD优化函数
+'''
 model.compile(loss=keras.losses.binary_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
+'''
+step 4 : 训练
+batch_size：对总的样本数进行分组，每组包含的样本数量
+epochs ：训练次数
+shuffle：是否把数据随机打乱之后再进行训练
+validation_split：拿出百分之多少用来做交叉验证
+verbose：屏显模式 0：不输出  1：输出进度  2：输出每次的训练结果
+'''
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          verbose=1,
+          verbose=2,
+          shuffle=True,
           validation_data=(x_test, y_test))
+
+model.summary()
+
+'''
+step 5 : 输出
+'''
+print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+result = model.predict(x_test, batch_size=batch_size, verbose=0)
+
+result_max = np.argmax(result, axis=1)
+test_max = np.argmax(y_test, axis=1)
+
+result_bool = np.equal(result_max, test_max)
+true_num = np.sum(result_bool)
+print("")
+print("The accuracy of the model is %f" % (true_num/len(result_bool)))
