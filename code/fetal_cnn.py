@@ -52,8 +52,8 @@ model = Sequential()
 '''step 2 : 构建网络层
 '''
 
-model.add(Conv2D(3, kernel_size=(10, 20),
-                 strides=(2, 4),
+model.add(Conv2D(filters=3, kernel_size=(10, 20),
+                 strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
 # model.add(Conv2D(64, (10, 10), activation='relu'))
@@ -97,4 +97,4 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-print('score:', score)
+
