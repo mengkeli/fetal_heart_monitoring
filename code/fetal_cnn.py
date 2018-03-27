@@ -52,8 +52,8 @@ model = Sequential()
 '''step 2 : 构建网络层
 '''
 
-model.add(Conv2D(3, kernel_size=(10, 10),
-                 strides=(1, 2),
+model.add(Conv2D(3, kernel_size=(10, 20),
+                 strides=(2, 4),
                  activation='relu',
                  input_shape=input_shape))
 # model.add(Conv2D(64, (10, 10), activation='relu'))
@@ -84,7 +84,7 @@ verbose：屏显模式 0：不输出  1：输出进度  2：输出每次的训�
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          verbose=1,
+          verbose=2,
           shuffle=True,
           validation_data=(x_test, y_test))
 
@@ -97,15 +97,4 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-
-result = model.predict(x_test, batch_size=batch_size, verbose=0)
-
-result_max = np.argmax(result, axis=1)
-test_max = np.argmax(y_test, axis=1)
-
-result_bool = np.equal(result_max, test_max)
-true_num = np.sum(result_bool)
-print("")
-print("result_bool is %d" % len(result_bool))
-print("true_num is %d" % true_num)
-print("The accuracy of the model is %f" % (true_num/len(result_bool)))
+print('score:', score)
