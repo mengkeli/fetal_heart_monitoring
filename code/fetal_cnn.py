@@ -84,7 +84,7 @@ verbose：屏显模式 0：不输出  1：输出进度  2：输出每次的训�
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          verbose=2,
+          verbose=1,
           shuffle=True,
           validation_data=(x_test, y_test))
 
