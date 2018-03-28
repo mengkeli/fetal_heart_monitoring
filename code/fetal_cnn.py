@@ -17,7 +17,7 @@ import numpy as np
 
 batch_size = 128
 num_classes = 2
-epochs = 20
+epochs = 10
 
 # input image dimensions
 img_rows, img_cols = 150, 2402
@@ -52,8 +52,8 @@ model = Sequential()
 '''step 2 : 构建网络层
 '''
 
-model.add(Conv2D(3, kernel_size=(10, 20),
-                 strides=(4, 8),
+model.add(Conv2D(filters=3, kernel_size=(10, 20),
+                 strides=(1, 2),
                  activation='relu',
                  input_shape=input_shape))
 # model.add(Conv2D(64, (10, 10), activation='relu'))
