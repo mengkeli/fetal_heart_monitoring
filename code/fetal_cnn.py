@@ -34,8 +34,10 @@ else:
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
     input_shape = (img_rows, img_cols, 1)
 
-x_train = x_train.astype('int32')
-x_test = x_test.astype('int32')
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+x_train /= 255
+x_test /= 255
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
@@ -56,7 +58,7 @@ model.add(Conv2D(filters=3, kernel_size=(10, 20),
                  strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
-# model.add(Conv2D(64, (10, 10), activation='relu'))
+model.add(Conv2D(5, (10, 10), activation='relu'))
 model.add(MaxPooling2D(pool_size=(4, 4)))
 # model.add(Dropout(0.25))
 model.add(Flatten())
