@@ -17,7 +17,7 @@ import numpy as np
 
 batch_size = 128
 num_classes = 2
-epochs = 10
+epochs = 20
 
 # input image dimensions
 img_rows, img_cols = 150, 2402
@@ -52,7 +52,11 @@ model = Sequential()
 '''step 2 : 构建网络层
 '''
 
+<<<<<<< HEAD
 model.add(Conv2D(filters=3, kernel_size=(10, 20),
+=======
+model.add(Conv2D(3, kernel_size=(10, 20),
+>>>>>>> 453e294ae5edcd0ba222fb81a1c8d02885f4454d
                  strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
@@ -97,4 +101,7 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+<<<<<<< HEAD
 
+=======
+>>>>>>> 453e294ae5edcd0ba222fb81a1c8d02885f4454d
