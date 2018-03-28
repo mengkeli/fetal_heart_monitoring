@@ -51,12 +51,7 @@ model = Sequential()
 
 '''step 2 : 构建网络层
 '''
-
-<<<<<<< HEAD
 model.add(Conv2D(filters=3, kernel_size=(10, 20),
-=======
-model.add(Conv2D(3, kernel_size=(10, 20),
->>>>>>> 453e294ae5edcd0ba222fb81a1c8d02885f4454d
                  strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
