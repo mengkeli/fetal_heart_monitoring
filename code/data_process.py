@@ -8,7 +8,7 @@ from scipy.fftpack import fft,ifft
 data_path = '../data/'
 
 raw_data_file = data_path + 'data_gzip.csv'
-zero_filter_file = data_path + 'data_zero_filter_03_50.csv'
+zero_filter_file = data_path + 'data_zero_filter_02_50.csv'
 label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series.npy'
@@ -112,11 +112,11 @@ def join_data_label(zero_filter_file, label_file):
     data_label.loc[data_label['nst_result'] == 2, 'nst_result'] = 1
     data_label.drop('id', axis=1, inplace=True)
 
-    # 规范数据，合理数据范围在61~210(150个值)
+    # 规范数据，合理数据范围在80~199(120个值)
     label = data_label.loc[:, ['nst_result']]
     data = data_label.drop('nst_result', axis=1)
-    data[data < 60] = 60
-    data[data >= 210] = 209
+    data[data < 80] = 80
+    data[data >= 200] = 199
     data['nst_result'] = label
     data = data.astype('uint8')
 
@@ -125,7 +125,7 @@ def join_data_label(zero_filter_file, label_file):
 
 def generate_imgdata(series_file):
     '''
-    生成与时间序列对应的图像数据 1 * 2402 -> 150 * 2402
+    生成与时间序列对应的图像数据 1 * 2402 -> 120 * 2402
     :param path:
     :return:
     '''
@@ -133,7 +133,7 @@ def generate_imgdata(series_file):
     x, y = f[:, 0:-1], f[:, -1:]
     num_data = x.shape[0]
     cols = x.shape[1]
-    rows = 210 - 60  # 图像的y轴刻度
+    rows = 200 - 80  # 图像的y轴刻度
     data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
 
     for i in range(num_data):
@@ -205,14 +205,14 @@ def load_data(file = series_file):
     np.random.shuffle(f)
 
     x, y = f[:, 0:-1], f[:, -1]
-    trainset_size = int(np.floor(f.shape[0] * 0.7)) # 15533, 6658
+    trainset_size = int(np.floor(f.shape[0] * 0.8)) # 0.7 -> 15533, 6658; 0.8 ->
     x_train, y_train = x[ :trainset_size], y[ :trainset_size]
     x_test, y_test = x[trainset_size:], y[trainset_size:]
     print('Successfully load data...')
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    filter_zero(raw_data_file, zero_filter_file, 0.3, 50)
+    filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
     # join_data_label(zero_filter_file, label_file)
     # generate_imgdata(series_file)
 
