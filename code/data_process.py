@@ -12,7 +12,7 @@ zero_filter_file = data_path + 'data_zero_filter_02_50.csv'
 label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series_02_50.npy'
-image_file = data_path + 'fetal_image.npy'
+image_file = data_path + 'fetal_image_02_50.npy'
 fft_file = data_path + 'fetal_fft.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
@@ -141,7 +141,7 @@ def generate_imgdata(series_file):
             print('i = %s' % i)
         image_mat = np.zeros((rows, cols), dtype=np.uint8)
         for j in range(cols):
-            image_mat[x[i][j]-60][j] = 1
+            image_mat[x[i][j]-80][j] = 1
         data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
     data_label_mat = np.hstack([data_mat, y])
    # data_mat_df = pd.DataFrame(data_label_mat)
@@ -212,7 +212,7 @@ def load_data(file = series_file):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
+    # filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
     # join_data_label(zero_filter_file, label_file)
-    # generate_imgdata(series_file)
+    generate_imgdata(series_file)
 
