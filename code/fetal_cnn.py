@@ -57,11 +57,10 @@ model.add(Conv2D(filters=4, kernel_size=(10, 20),
                  activation='relu',
                  input_shape=input_shape))
 model.add(Conv2D(8, (10, 20), activation='relu'))
-model.add(MaxPooling2D(pool_size=(4, 4)))
+model.add(MaxPooling2D(pool_size=(4, 4), strides=(1,1), padding='same'))
 model.add(Dropout(0.25))
 model.add(Flatten())
 
-model.add(Dense(128, activation='relu')) # 隐藏节点128个
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax')) # 最后一层，输出结果是2个类别
 
