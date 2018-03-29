@@ -12,7 +12,7 @@ zero_filter_file = data_path + 'data_zero_filter_02_50.csv'
 label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series_02_50.npy'
-image_file = data_path + 'fetal_image_02_50_bold.npy'
+image_file = data_path + 'fetal_image_02_50.npy'
 fft_file = data_path + 'fetal_fft.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
