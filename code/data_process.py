@@ -12,7 +12,7 @@ zero_filter_file = data_path + 'data_zero_filter_02_50.csv'
 label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series_02_50.npy'
-image_file = data_path + 'fetal_image_02_50.npy'
+image_file = data_path + 'fetal_image_02_50_bold.npy'
 fft_file = data_path + 'fetal_fft.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
@@ -149,6 +149,32 @@ def generate_imgdata(series_file):
     np.save(image_file, data_label_mat)
     return
 
+def generate_imgdata_bold(series_file):
+    '''
+    生成与时间序列对应的图像数据 1 * 2402 -> 120 * 2402
+    读入100张
+    :param path:
+    :return:
+    '''
+    f = np.load(series_file)
+    x, y = f[0:100, 0:-1], f[0:100, -1:]
+    num_data = x.shape[0]
+    cols = x.shape[1]
+    rows = 200 - 80  # 图像的y轴刻度
+    data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
+
+    for i in range(num_data):
+        if (i % 1000 == 0):
+            print('i = %s' % i)
+        image_mat = np.zeros((rows, cols), dtype=np.uint8)
+        for j in range(cols):
+            image_mat[x[i][j] - 80][j] = 1
+        data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
+    data_label_mat = np.hstack([data_mat, y])
+
+    np.save(image_file, data_label_mat)
+    return
+
 def transfer_fft(series_file):
     '''
     对波形图像进行傅里叶变换
@@ -214,5 +240,5 @@ def load_data(file = series_file):
 if __name__ == '__main__':
     # filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
     # join_data_label(zero_filter_file, label_file)
-    generate_imgdata(series_file)
+    generate_imgdata_bold(series_file)
 

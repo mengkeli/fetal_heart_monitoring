@@ -16,7 +16,7 @@ from keras import backend as K
 import numpy as np
 import os
 
-batch_size = 128
+batch_size = 16
 num_classes = 2
 epochs = 10
 data_augmentation = False
@@ -67,8 +67,8 @@ model.add(Dropout(0.5))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
-# initiate RMSprop optimizer
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+# initiate RMSprop optimizer -> change to Adam
+opt = keras.optimizers.adam()
 
 # Let's train the model using RMSprop
 model.compile(loss='categorical_crossentropy',
@@ -95,9 +95,9 @@ else:
         samplewise_std_normalization=False,  # divide each input by its std
         zca_whitening=False,  # apply ZCA whitening
         rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-        width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-        height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-        horizontal_flip=True,  # randomly flip images
+        width_shift_range=0.2,  # randomly shift images horizontally (fraction of total width)
+        height_shift_range=0,  # randomly shift images vertically (fraction of total height)
+        horizontal_flip=False,  # randomly flip images
         vertical_flip=False)  # randomly flip images
 
     # Compute quantities required for feature-wise normalization
@@ -112,11 +112,11 @@ else:
                         workers=4)
 
 # Save model and weights
-if not os.path.isdir(save_dir):
-    os.makedirs(save_dir)
-model_path = os.path.join(save_dir, model_name)
-model.save(model_path)
-print('Saved trained model at %s ' % model_path)
+# if not os.path.isdir(save_dir):
+#     os.makedirs(save_dir)
+# model_path = os.path.join(save_dir, model_name)
+# model.save(model_path)
+# print('Saved trained model at %s ' % model_path)
 
 # Score trained model.
 scores = model.evaluate(x_test, y_test, verbose=2)
