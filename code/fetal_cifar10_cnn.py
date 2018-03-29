@@ -12,6 +12,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import numpy as np
 import os
 
 batch_size = 128
@@ -22,8 +24,18 @@ num_predictions = 2
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 model_name = 'keras_cifar10_trained_model.h5'
 
+img_rows = 120
+img_cols = 2402
+
 # The data, shuffled and split between train and test sets:
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
+x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+input_shape = (img_rows, img_cols, 1)
+
+y_train = np.reshape(y_train, (len(y_train), 1))
+y_test = np.reshape(y_test, (len(y_test), 1))
+
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')

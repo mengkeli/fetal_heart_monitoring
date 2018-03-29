@@ -52,13 +52,18 @@ model.add(MaxPooling2D(pool_size=(4, 4)))
 | 8        | 10      |             |         |           | 128        |       | 0.6894 |
 
 ```python
-model.add(Conv2D(filters=3, kernel_size=(10, 20),
+model.add(Conv2D(filters=4, kernel_size=(10, 20),
                  strides=(4, 8),
                  activation='relu',
                  input_shape=input_shape))
-model.add(Conv2D(5, (10, 10), activation='relu')) # test1
-model.add(MaxPooling2D(pool_size=(4, 4)))
-#test2  model.add(Dense(128, activation='relu'))
+model.add(Conv2D(8, (10, 20), activation='relu'))
+model.add(MaxPooling2D(pool_size=(4, 4), strides=(1,1), padding='same'))
+model.add(Dropout(0.25))
+model.add(Flatten())
+
+model.add(Dropout(0.2))
+model.add(Dense(num_classes, activation='softmax')) # 最后一层，输出结果是2个类别
+
 ```
 
 | 20180328 | filters | kernel_size | strides | pool_size | Dense | drop_out | Score  |
@@ -74,5 +79,36 @@ model.add(MaxPooling2D(pool_size=(4, 4)))
 | 5        |         |             |         |           |       | 0.25     | 0.7957 |
 | 6        |         |             |         |           | 128   | 0.25     | 0.8025 |
 | 7        |         |             |         |           |       | 0.25/0.2 | 0.8011 |
-|          |         |             |         |           |       |          |        |
-|          |         |             |         |           |       |          |        |
+| 8        | 4       | (10,20)     |         |           |       |          |        |
+|          | 8       |             |         |           |       |          | 0.7948 |
+
+###fetal_mlp.py
+
+```python
+model.add(Dense(512, activation='relu', input_shape=(288240,)))
+model.add(Dropout(0.4))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.4))
+model.add(Dense(num_classes, activation='softmax'))
+
+```
+
+
+
+
+
+| 20180328 | Dense1 | drop_out1 | Dense2 | drop_out2 |      | train_acc | Test_acc |
+| -------- | ------ | --------- | ------ | --------- | ---- | --------- | -------- |
+| 1        | 512    | 0.2       | 512    | 0.2       |      | 0.9942    | Test_acc |
+| 2        | 128    | 0.4       | 128    | 0.4       |      | 0.9901    | 0.7289   |
+| 3        |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
+|          |        |           |        |           |      |           |          |
