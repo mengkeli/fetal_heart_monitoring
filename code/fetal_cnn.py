@@ -13,7 +13,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
-import numpy as np
 
 batch_size = 128
 num_classes = 2
@@ -34,8 +33,8 @@ else:
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
     input_shape = (img_rows, img_cols, 1)
 
-x_train = x_train.astype('int32')
-x_test = x_test.astype('int32')
+x_train = x_train.astype('uint8')
+x_test = x_test.astype('uint8')
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
