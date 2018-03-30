@@ -18,7 +18,7 @@ import os
 
 batch_size = 16
 num_classes = 2
-epochs = 30
+epochs = 5
 data_augmentation = True
 num_predictions = 2
 save_dir = os.path.join(os.getcwd(), 'saved_models')
@@ -45,7 +45,7 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same',
+model.add(Conv2D(32, (3, 3), padding='valid',
                  input_shape=(120, 2402, 1)))
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
@@ -53,12 +53,12 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(4, 4)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(64, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(4, 4)))
-model.add(Dropout(0.25))
+#model.add(Conv2D(64, (3, 3), padding='same'))
+#model.add(Activation('relu'))
+#model.add(Conv2D(64, (3, 3)))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(4, 4)))
+#model.add(Dropout(0.25))
 
 model.add(Flatten())
 model.add(Dense(128))
@@ -109,11 +109,11 @@ else:
                         workers=4)
 
 # Save model and weights
-if not os.path.isdir(save_dir):
-    os.makedirs(save_dir)
-model_path = os.path.join(save_dir, model_name)
-model.save(model_path)
-print('Saved trained model at %s ' % model_path)
+# if not os.path.isdir(save_dir):
+#    os.makedirs(save_dir)
+# model_path = os.path.join(save_dir, model_name)
+# model.save(model_path)
+# print('Saved trained model at %s ' % model_path)
 
 # Score trained model.
 scores = model.evaluate(x_test, y_test, verbose=2)
