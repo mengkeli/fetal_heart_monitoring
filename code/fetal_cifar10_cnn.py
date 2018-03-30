@@ -18,8 +18,8 @@ import os
 
 batch_size = 16
 num_classes = 2
-epochs = 10
-data_augmentation = False
+epochs = 30
+data_augmentation = True
 num_predictions = 2
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 model_name = 'keras_cifar10_trained_model.h5'
@@ -50,20 +50,20 @@ model.add(Conv2D(32, (3, 3), padding='same',
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(4, 4)))
 model.add(Dropout(0.25))
 
 model.add(Conv2D(64, (3, 3), padding='same'))
 model.add(Activation('relu'))
 model.add(Conv2D(64, (3, 3)))
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(4, 4)))
 model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(512))
+model.add(Dense(128))
 model.add(Activation('relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.25))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
@@ -74,9 +74,6 @@ opt = keras.optimizers.adam()
 model.compile(loss='categorical_crossentropy',
               optimizer=opt,
               metrics=['accuracy'])
-
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
 
 if not data_augmentation:
     print('Not using data augmentation.')
@@ -112,11 +109,11 @@ else:
                         workers=4)
 
 # Save model and weights
-# if not os.path.isdir(save_dir):
-#     os.makedirs(save_dir)
-# model_path = os.path.join(save_dir, model_name)
-# model.save(model_path)
-# print('Saved trained model at %s ' % model_path)
+if not os.path.isdir(save_dir):
+    os.makedirs(save_dir)
+model_path = os.path.join(save_dir, model_name)
+model.save(model_path)
+print('Saved trained model at %s ' % model_path)
 
 # Score trained model.
 scores = model.evaluate(x_test, y_test, verbose=2)
