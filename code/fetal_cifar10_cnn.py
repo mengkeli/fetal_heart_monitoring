@@ -18,7 +18,7 @@ import os
 
 batch_size = 16
 num_classes = 2
-epochs = 5
+epochs = 10
 data_augmentation = True
 num_predictions = 2
 save_dir = os.path.join(os.getcwd(), 'saved_models')
@@ -45,7 +45,7 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='valid',
+model.add(Conv2D(32, (3, 3), padding='same',
                  input_shape=(120, 2402, 1)))
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
@@ -53,12 +53,12 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(4, 4)))
 model.add(Dropout(0.25))
 
-#model.add(Conv2D(64, (3, 3), padding='same'))
-#model.add(Activation('relu'))
-#model.add(Conv2D(64, (3, 3)))
-#model.add(Activation('relu'))
-#model.add(MaxPooling2D(pool_size=(4, 4)))
-#model.add(Dropout(0.25))
+model.add(Conv2D(64, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(64, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(4, 4)))
+model.add(Dropout(0.25))
 
 model.add(Flatten())
 model.add(Dense(128))
@@ -67,8 +67,8 @@ model.add(Dropout(0.25))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
-# initiate RMSprop optimizer -> change to Adam
-opt = keras.optimizers.adam()
+# initiate RMSprop optimizer 
+opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 
 # Let's train the model using RMSprop
 model.compile(loss='categorical_crossentropy',
@@ -92,7 +92,7 @@ else:
         samplewise_std_normalization=False,  # divide each input by its std
         zca_whitening=False,  # apply ZCA whitening
         rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-        width_shift_range=0.2,  # randomly shift images horizontally (fraction of total width)
+        width_shift_range=0.4,  # randomly shift images horizontally (fraction of total width)
         height_shift_range=0,  # randomly shift images vertically (fraction of total height)
         horizontal_flip=False,  # randomly flip images
         vertical_flip=False)  # randomly flip images
