@@ -1,6 +1,4 @@
-# -*- coding:utf-8 -*-
-'''
-This is a reproduction of the IRNN experiment
+'''This is a reproduction of the IRNN experiment
 with pixel-by-pixel sequential MNIST in
 "A Simple Way to Initialize Recurrent Networks of Rectified Linear Units"
 by Quoc V. Le, Navdeep Jaitly, Geoffrey E. Hinton
@@ -25,21 +23,19 @@ from keras.layers import SimpleRNN
 from keras import initializers
 from keras.optimizers import RMSprop
 
-batch_size = 128
+batch_size = 16
 num_classes = 2
-epochs = 20
+epochs = 10
 hidden_units = 100
 
 learning_rate = 1e-6
 clip_norm = 1.0
 
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
+(x_train, y_train), (x_test, y_test) = data_process.load_data()
 
 x_train = x_train.reshape(x_train.shape[0], -1, 1)
 x_test = x_test.reshape(x_test.shape[0], -1, 1)
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
@@ -66,7 +62,7 @@ model.compile(loss='categorical_crossentropy',
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
-          verbose=2,
+          verbose=1,
           validation_data=(x_test, y_test))
 
 scores = model.evaluate(x_test, y_test, verbose=0)

@@ -19,20 +19,19 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras.callbacks import ReduceLROnPlateau
 from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
-from keras import backend as K
 from keras.models import Model
-from keras.datasets import cifar10
+import data_process
 import numpy as np
 import os
 
 # Training parameters
-batch_size = 32
-epochs = 200
+batch_size = 16
+epochs = 10
 data_augmentation = True
 num_classes = 2
 
 # Subtracting pixel mean improves accuracy
-subtract_pixel_mean = True
+subtract_pixel_mean = False
 
 # Model parameter
 # ----------------------------------------------------------------------------
@@ -59,7 +58,7 @@ depth = n * 6 + 2
 model_type = 'ResNet%dv%d' % (depth, version)
 
 # Load the CIFAR10 data.
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+(x_train, y_train), (x_test, y_test) = data_process.load_data()
 
 # Input image dimensions.
 input_shape = x_train.shape[1:]
@@ -358,11 +357,11 @@ else:
         # randomly rotate images in the range (deg 0 to 180)
         rotation_range=0,
         # randomly shift images horizontally
-        width_shift_range=0.1,
+        width_shift_range=0.2,
         # randomly shift images vertically
-        height_shift_range=0.1,
+        height_shift_range=0,
         # randomly flip images
-        horizontal_flip=True,
+        horizontal_flip=False,
         # randomly flip images
         vertical_flip=False)
 
