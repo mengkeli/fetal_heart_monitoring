@@ -41,14 +41,14 @@ from keras.layers import LSTM
 # Training parameters.
 batch_size = 16
 num_classes = 2
-epochs = 5
+epochs = 10
 
 # Embedding dimensions.
-row_hidden = 128
-col_hidden = 128
+row_hidden = 64
+col_hidden = 64
 
 # The data, shuffled and split between train and test sets.
-(x_train, y_train), (x_test, y_test) = data_process.load_data()
+(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
 # Reshapes data to 4D for Hierarchical RNN.
 img_rows, img_cols = 120, 2402

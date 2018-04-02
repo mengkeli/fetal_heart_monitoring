@@ -58,7 +58,7 @@ depth = n * 6 + 2
 model_type = 'ResNet%dv%d' % (depth, version)
 
 # Load the CIFAR10 data.
-(x_train, y_train), (x_test, y_test) = data_process.load_data()
+(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
 # Input image dimensions.
 input_shape = x_train.shape[1:]
