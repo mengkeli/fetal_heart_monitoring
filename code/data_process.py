@@ -182,38 +182,49 @@ def transfer_fft(series_file):
     '''
     f = np.load(series_file)
     # 采样点选择100个，因为设置的信号频率分量最高为600赫兹，根据采样定理知采样频率要大于信号频率2倍（一秒内有2个采样点）
-    x = np.linspace(0, 1, 100)
+    x = np.linspace(0, 1, 2402)
     y = f[:, 0:-1]
     # 快速傅里叶变换
-    yy = fft(y)
-    yreal = yy.real  # 获取实数部分
-    yimag = yy.imag  # 获取虚数部分
+    yy = np.zeros((y.shape[0], 1), dtype=np.float64)
 
-    yf = abs(fft(y))  # 取绝对值
-    yf1 = abs(fft(y)) / len(x)  # 归一化处理
-    yf2 = yf1[range(int(len(x) / 2))]  # 由于对称性，只取一半区间
+    for i in range(y.shape[0]):
+        yy[i] = max(fft(y[i, :])) / 2402
 
-    xf = np.arange(len(y))  # 频率
-    xf1 = xf
-    xf2 = xf[range(int(len(x) / 2))]  # 取一半区间
+    yd = pd.DataFrame(yy)
+    label = pd.DataFrame(f[:, -1])
+    data_label = pd.merge(yd, label, how='left', left_index=True, right_index=True)
 
-    plt.subplot(221)
-    plt.plot(x[0:50], y[0:50])
-    plt.title('Original wave')
+    np.save(fft_file, data_label)
 
-    plt.subplot(222)
-    plt.plot(xf, yf, 'r')
-    plt.title('FFT of Mixed wave(two sides frequency range)', fontsize=7, color='#7A378B')  # 注意这里的颜色可以查询颜色代码表
 
-    plt.subplot(223)
-    plt.plot(xf1, yf1, 'g')
-    plt.title('FFT of Mixed wave(normalization)', fontsize=9, color='r')
+    # yreal = yy.real  # 获取实数部分
+    # yimag = yy.imag  # 获取虚数部分
 
-    plt.subplot(224)
-    plt.plot(xf2, yf2, 'b')
-    plt.title('FFT of Mixed wave)', fontsize=10, color='#F08080')
-
-    plt.show()
+    # yf = abs(fft(y))  # 取绝对值
+    # yf1 = abs(fft(y)) / len(x)  # 归一化处理
+    # yf2 = yf1[range(int(len(x) / 2))]  # 由于对称性，只取一半区间
+    #
+    # xf = np.arange(len(y))  # 频率
+    # xf1 = xf
+    # xf2 = xf[range(int(len(x) / 2))]  # 取一半区间
+    #
+    # plt.subplot(221)
+    # plt.plot(x[0:50], y[0:50])
+    # plt.title('Original wave')
+    #
+    # plt.subplot(222)
+    # plt.plot(xf, yf, 'r')
+    # plt.title('FFT of Mixed wave(two sides frequency range)', fontsize=7, color='#7A378B')  # 注意这里的颜色可以查询颜色代码表
+    #
+    # plt.subplot(223)
+    # plt.plot(xf1, yf1, 'g')
+    # plt.title('FFT of Mixed wave(normalization)', fontsize=9, color='r')
+    #
+    # plt.subplot(224)
+    # plt.plot(xf2, yf2, 'b')
+    # plt.title('FFT of Mixed wave)', fontsize=10, color='#F08080')
+    #
+    # plt.show()
 
 def load_data(file = series_file):
     """Loads the fetal dataset.

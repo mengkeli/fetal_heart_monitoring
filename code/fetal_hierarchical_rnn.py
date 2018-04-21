@@ -41,7 +41,7 @@ from keras.layers import LSTM
 # Training parameters.
 batch_size = 16
 num_classes = 2
-epochs = 10
+epochs = 5
 
 # Embedding dimensions.
 row_hidden = 64
