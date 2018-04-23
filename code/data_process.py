@@ -2,7 +2,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 from PIL import Image
 import seaborn as sns
 from scipy.interpolate import spline
@@ -15,7 +14,6 @@ label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series_02_50.npy'
 image_file = data_path + 'fetal_image_02_50.npy'
-fft_file = data_path + 'fetal_fft.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
     '''
@@ -137,19 +135,19 @@ def generate_imgdata(series_file):
     num_data = x.shape[0]
     h, w = 177, 2804
     data_mat = np.zeros((num_data, h * w), dtype=np.uint8)
-    img_dir = datapath + 'img_data/'
+    img_dir = '../data/img_data/'
     for i in range(num_data):
         if (i % 1000 == 0):
             print('i = %s' % i)
         savename = str(i) + '.png'
-        sns.set(rc={"figure.figsize": (50, 3), "lines.linewidth": 4}, style='white');
+        sns.set(rc={"figure.figsize": (50, 3), "lines.linewidth": 4}, style='white')
         plt.xticks([])
         plt.yticks([])
         plt.axis('off')
         sns.tsplot(data=x_d.loc[i], color="black")
         plt.savefig(img_dir+savename, bbox_inches='tight', edgecolor='white')
         img = Image.open(img_dir+savename)
-        img_bi= img.convert('L')
+        img_bi = img.convert('L')
         img_array = np.array(img_bi)
 
         data_mat[i][:] = np.reshape(img_array, (1, h * w))
@@ -182,5 +180,5 @@ def load_data(file = series_file):
 if __name__ == '__main__':
     # filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
     # join_data_label(zero_filter_file, label_file)
-    generate_imgdata()
+    generate_imgdata(series_file)
 
