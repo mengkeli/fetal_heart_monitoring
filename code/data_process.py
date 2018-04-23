@@ -2,7 +2,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.fftpack import fft,ifft
+import matplotlib.image as mpimg
+from PIL import Image
+import seaborn as sns
+from scipy.interpolate import spline
 
 data_path = '../data/'
 
@@ -16,7 +19,7 @@ fft_file = data_path + 'fetal_fft.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
     '''
-    对于0值的点, 使用左右的平均值做为测量值
+    对于0值的点, 使用左右非零的平均值做为测量值
     :param raw_data_file:
     :param zero_filter_file:
     :zero_rate: 0.3
@@ -58,7 +61,7 @@ def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
             # 连续0值超过length的, 剔除
             if bad_row_flag == True:
                 bad_row += 1
-                continue;
+                continue
 
             # 0值缺失严重的, 剔除
             if zero_count >= zero_rate * 2400:
@@ -130,101 +133,30 @@ def generate_imgdata(series_file):
     '''
     f = np.load(series_file)
     x, y = f[:, 0:-1], f[:, -1:]
+    x_d = pd.DataFrame(x)
     num_data = x.shape[0]
-    cols = x.shape[1]
-    rows = 200 - 80  # 图像的y轴刻度
-    data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
-
+    h, w = 177, 2804
+    data_mat = np.zeros((num_data, h * w), dtype=np.uint8)
+    img_dir = datapath + 'img_data/'
     for i in range(num_data):
         if (i % 1000 == 0):
             print('i = %s' % i)
-        image_mat = np.zeros((rows, cols), dtype=np.uint8)
-        for j in range(cols):
-            image_mat[x[i][j]-80][j] = 1
-        data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
-    data_label_mat = np.hstack([data_mat, y])
-   # data_mat_df = pd.DataFrame(data_label_mat)
+        savename = str(i) + '.png'
+        sns.set(rc={"figure.figsize": (50, 3), "lines.linewidth": 4}, style='white');
+        plt.xticks([])
+        plt.yticks([])
+        plt.axis('off')
+        sns.tsplot(data=x_d.loc[i], color="black")
+        plt.savefig(img_dir+savename, bbox_inches='tight', edgecolor='white')
+        img = Image.open(img_dir+savename)
+        img_bi= img.convert('L')
+        img_array = np.array(img_bi)
 
-    np.save(image_file, data_label_mat)
-    return
-
-def generate_imgdata_bold(series_file):
-    '''
-    生成与时间序列对应的图像数据 1 * 2402 -> 120 * 2402
-    读入100张
-    :param path:
-    :return:
-    '''
-    f = np.load(series_file)
-    x, y = f[0:100, 0:-1], f[0:100, -1:]
-    num_data = x.shape[0]
-    cols = x.shape[1]
-    rows = 200 - 80  # 图像的y轴刻度
-    data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
-
-    for i in range(num_data):
-        if (i % 1000 == 0):
-            print('i = %s' % i)
-        image_mat = np.zeros((rows, cols), dtype=np.uint8)
-        for j in range(cols):
-            image_mat[x[i][j] - 80][j] = 1
-        data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
+        data_mat[i][:] = np.reshape(img_array, (1, h * w))
     data_label_mat = np.hstack([data_mat, y])
 
     np.save(image_file, data_label_mat)
     return
-
-def transfer_fft(series_file):
-    '''
-    对波形图像进行傅里叶变换
-    :param path: 
-    :return: 
-    '''
-    f = np.load(series_file)
-    # 采样点选择100个，因为设置的信号频率分量最高为600赫兹，根据采样定理知采样频率要大于信号频率2倍（一秒内有2个采样点）
-    x = np.linspace(0, 1, 2402)
-    y = f[:, 0:-1]
-    # 快速傅里叶变换
-    yy = np.zeros((y.shape[0], 1), dtype=np.float64)
-
-    for i in range(y.shape[0]):
-        yy[i] = max(fft(y[i, :])) / 2402
-
-    yd = pd.DataFrame(yy)
-    label = pd.DataFrame(f[:, -1])
-    data_label = pd.merge(yd, label, how='left', left_index=True, right_index=True)
-
-    np.save(fft_file, data_label)
-
-
-    # yreal = yy.real  # 获取实数部分
-    # yimag = yy.imag  # 获取虚数部分
-
-    # yf = abs(fft(y))  # 取绝对值
-    # yf1 = abs(fft(y)) / len(x)  # 归一化处理
-    # yf2 = yf1[range(int(len(x) / 2))]  # 由于对称性，只取一半区间
-    #
-    # xf = np.arange(len(y))  # 频率
-    # xf1 = xf
-    # xf2 = xf[range(int(len(x) / 2))]  # 取一半区间
-    #
-    # plt.subplot(221)
-    # plt.plot(x[0:50], y[0:50])
-    # plt.title('Original wave')
-    #
-    # plt.subplot(222)
-    # plt.plot(xf, yf, 'r')
-    # plt.title('FFT of Mixed wave(two sides frequency range)', fontsize=7, color='#7A378B')  # 注意这里的颜色可以查询颜色代码表
-    #
-    # plt.subplot(223)
-    # plt.plot(xf1, yf1, 'g')
-    # plt.title('FFT of Mixed wave(normalization)', fontsize=9, color='r')
-    #
-    # plt.subplot(224)
-    # plt.plot(xf2, yf2, 'b')
-    # plt.title('FFT of Mixed wave)', fontsize=10, color='#F08080')
-    #
-    # plt.show()
 
 def load_data(file = series_file):
     """Loads the fetal dataset.
@@ -250,5 +182,5 @@ def load_data(file = series_file):
 if __name__ == '__main__':
     # filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
     # join_data_label(zero_filter_file, label_file)
-    generate_imgdata_bold(series_file)
+    generate_imgdata()
 

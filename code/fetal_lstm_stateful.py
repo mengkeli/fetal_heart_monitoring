@@ -47,7 +47,7 @@ from keras.layers import Dense, LSTM
 # ----------------------------------------------------------
 
 # length of input
-input_len = 1000
+input_len = 2402
 
 # The window length of the moving average used to generate
 # the output from the input in the input/output pair used

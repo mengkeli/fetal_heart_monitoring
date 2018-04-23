@@ -15,3 +15,11 @@ plt.title('zero_value in raw data')
 plt.xlabel('samples')
 plt.ylabel('zero_value numbers in each sample')
 plt.savefig('zero_count_in_raw_data')
+
+plt.rc("font", size=14)
+ax.spines['bottom'].set_position(('data', 0))
+ax.spines['left'].set_position(('data', 0))
+sns.axes_style()
+sns.despine(left=True,)
+sns.set(rc={"figure.figsize": (60, 6)},style='white');
+ax = sns.tsplot(data=sample1)
