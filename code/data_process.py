@@ -132,7 +132,7 @@ def generate_imgdata(series_file):
     f = np.load(series_file)
     x, y = f[:, 0:-1], f[:, -1:]
     num_data = x.shape[0]
-    img_dir = datapath + 'smooth/'
+    img_dir = data_path + 'smooth/'
 
     for i in range(num_data):
         if (i % 1000 == 0):
