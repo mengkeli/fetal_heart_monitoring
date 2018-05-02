@@ -23,3 +23,8 @@ sns.axes_style()
 sns.despine(left=True,)
 sns.set(rc={"figure.figsize": (60, 6)},style='white');
 ax = sns.tsplot(data=sample1)
+
+x = np.linspace(0, 2402, 1)
+y = np.array(sample1)
+tck = interpolate.splrep(x, y)
+y_bspline = interpolate.splev(x_new, tck)

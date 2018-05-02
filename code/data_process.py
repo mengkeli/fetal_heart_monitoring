@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 import numpy as np
 import pandas as pd
+import func
 import matplotlib.pyplot as plt
 from PIL import Image
 import seaborn as sns
-from scipy.interpolate import spline
 
 data_path = '../data/'
 
@@ -125,35 +125,28 @@ def join_data_label(zero_filter_file, label_file):
 
 def generate_imgdata(series_file):
     '''
-    生成与时间序列对应的图像数据 1 * 2402 -> 120 * 2402
+    生成与时间序列对应的图像数据,并进行平滑处理 1 * 2402 -> h, w = 177, 3362
     :param path:
     :return:
     '''
     f = np.load(series_file)
     x, y = f[:, 0:-1], f[:, -1:]
-    x_d = pd.DataFrame(x)
     num_data = x.shape[0]
-    h, w = 177, 2804
-    data_mat = np.zeros((num_data, h * w), dtype=np.uint8)
-    img_dir = '../data/img_data/'
+    img_dir = datapath + 'smooth/'
+
     for i in range(num_data):
         if (i % 1000 == 0):
             print('i = %s' % i)
         savename = str(i) + '.png'
-        sns.set(rc={"figure.figsize": (50, 3), "lines.linewidth": 4}, style='white')
+        yhat = func.savitzky_golay(x[i, :], window_size=31, order=4)
+        sns.set(rc={"figure.figsize": (60, 3), "lines.linewidth": 3}, style='white');
         plt.xticks([])
         plt.yticks([])
         plt.axis('off')
-        sns.tsplot(data=x_d.loc[i], color="black")
-        plt.savefig(img_dir+savename, bbox_inches='tight', edgecolor='white')
-        img = Image.open(img_dir+savename)
-        img_bi = img.convert('L')
-        img_array = np.array(img_bi)
+        sns.tsplot(data=yhat, color="black")
+        plt.savefig(img_dir + savename, bbox_inches='tight', edgecolor='white')
+        plt.close('all')
 
-        data_mat[i][:] = np.reshape(img_array, (1, h * w))
-    data_label_mat = np.hstack([data_mat, y])
-
-    np.save(image_file, data_label_mat)
     return
 
 def load_data(file = series_file):
