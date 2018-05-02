@@ -51,7 +51,7 @@ col_hidden = 64
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
 # Reshapes data to 4D for Hierarchical RNN.
-img_rows, img_cols = 120, 2402
+img_rows, img_cols = 41, 572
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
