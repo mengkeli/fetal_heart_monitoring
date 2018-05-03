@@ -29,22 +29,10 @@ model.compile(loss='mae', optimizer='adam')
 history = model.fit(x_train, y_train, epochs=50, batch_size=72, validation_data=(x_test, y_test), verbose=2, shuffle=False)
 
 # plot history
-pyplot.plot(history.history['loss'], label='train')
-pyplot.plot(history.history['val_loss'], label='test')
-pyplot.legend()
-pyplot.show()
-
-# design network
-model = Sequential()
-model.add(LSTM(50, input_shape=(x_train.shape[1], x_train.shape[2])))
-model.add(Dense(1))
-model.compile(loss='mae', optimizer='adam')
-# fit network
-history = model.fit(x_train, train_y, epochs=50, batch_size=72, validation_data=(x_test, y_test), verbose=2, shuffle=False)
-# plot history
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
 plt.legend()
+plt.savefig('../data/lstm_history.png',bbox_inches='tight', edgecolor='white')
 plt.show()
 
 # make a prediction
@@ -53,7 +41,7 @@ x_test = x_test.reshape((x_test.shape[0], x_test.shape[2]))
 # invert scaling for forecast
 inv_yhat = np.concatenate((yhat, x_test[:, 1:]), axis=1)
 inv_yhat = MinMaxScaler.scaler.inverse_transform(inv_yhat)
-inv_yhat = inv_yhat[:,0]
+inv_yhat = inv_yhat[:, 0]
 # invert scaling for actual
 y_test = y_test.reshape((len(y_test), 1))
 inv_y = np.concatenate((y_test, x_test[:, 1:]), axis=1)
