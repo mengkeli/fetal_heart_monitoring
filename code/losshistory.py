@@ -9,7 +9,10 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import SGD, Adam, RMSprop
 from keras.utils import np_utils
+import matplotlib
+matplotlib.use('GTK')
 import matplotlib.pyplot as plt
+
 
 #写一个LossHistory类，保存loss和acc
 class LossHistory(keras.callbacks.Callback):

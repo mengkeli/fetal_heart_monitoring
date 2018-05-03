@@ -18,11 +18,13 @@ batch_size = 128
 num_classes = 2
 epochs = 10
 
+img_rows, img_cols = data_process.img_rows, data_process.img_cols
+
 # the data, shuffled and split between train and test sets
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
-x_train = x_train.reshape(17740, 120 * 2402)
-x_test = x_test.reshape(4435, 120 * 2402)
+x_train = x_train.reshape(x_train.shape[0], img_rows * img_cols)
+x_test = x_test.reshape(x_test.shape[0], img_rows * img_cols)
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 
@@ -34,7 +36,7 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Dense(64, activation='relu', input_shape=(288240,)))
+model.add(Dense(64, activation='relu', input_shape=(img_rows * img_cols,)))
 model.add(Dropout(0.4))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.4))
