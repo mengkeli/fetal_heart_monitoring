@@ -9,12 +9,12 @@ import seaborn as sns
 data_path = '../data/'
 
 raw_data_file = data_path + 'data_gzip.csv'
-zero_filter_file = data_path + 'data_zero_filter_02_50.csv'
+zero_filter_file = data_path + 'data_zero_filter_01_20.csv'
 label_file = data_path + 'info.csv'
 
-series_file = data_path + 'fetal_series_02_50.npy'
+series_file = data_path + 'fetal_series_01_20.npy'
 series_smooth_file = data_path + 'fetal_series_smooth.npy'
-image_file = data_path + 'fetal_image_02_50_bold.npy'
+image_file = data_path + 'fetal_image_01_20_bold.npy'
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
     '''
@@ -135,31 +135,6 @@ def generate_imgdata(series_file):
     num_data = x.shape[0]
     img_dir = data_path + 'smooth/'
 
-    for i in range(num_data):
-        if (i % 1000 == 0):
-            print('i = %s' % i)
-        savename = str(i) + '.png'
-        yhat = func.savitzky_golay(x[i, :], window_size=31, order=4)
-        sns.set(rc={"figure.figsize": (60, 3), "lines.linewidth": 3}, style='white');
-        plt.xticks([])
-        plt.yticks([])
-        plt.axis('off')
-        sns.tsplot(data=yhat, color="black")
-        plt.savefig(img_dir + savename, bbox_inches='tight', edgecolor='white')
-        plt.close('all')
-
-    img = Image.open(img_dir + '1.png')
-    h, w = img.size
-    data_mat = np.zeros((num_data, h * w), dtype=np.uint8)
-    for i in range(num_data):
-        img = Image.open(img_dir + savename)
-        img_bi = img.convert('1')  # 转化为二值化图
-        img_array = np.array(img_bi)
-        data_mat[i][:] = np.reshape(img_array, (1, h * w))
-
-    data_label_mat = np.hstack([data_mat, y])
-
-    np.save(image_file, data_label_mat)
     return
 
 def load_data(file = series_file):
@@ -184,7 +159,7 @@ def load_data(file = series_file):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    # filter_zero(raw_data_file, zero_filter_file, 0.2, 50)
+    filter_zero(raw_data_file, zero_filter_file, 0.1, 20)
     # join_data_label(zero_filter_file, label_file)
-    generate_imgdata(series_file)
+    # generate_imgdata(series_file)
 
