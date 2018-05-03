@@ -234,35 +234,4 @@ numpy、scipy、matplotlib
 
 训练用图的尺寸为10*0.5，在能看清图像的前提下，使得图像最小
 
-
-
-zero_rate = 0.100000
-zero_length = 20
-origin_row = 24360.
-total_row = 18237.
-bad_row = 6109.
-zero_row = 14.
-
-zero_rate = 0.100000
-zero_length = 30
-origin_row = 24360.
-total_row = 20123.
-bad_row = 4143.
-zero_row = 94.
-
-zero_rate = 0.150000
-zero_length = 30
-
-total_row = 20202.
-
-bad_row = 4143.
-zero_row = 15.
-
-
-
-zero_rate = 0.150000
-zero_length = 20
-origin_row = 24360.
-total_row = 18248.
-bad_row = 6109.
-zero_row = 3.
+join_data_label	之后01_30还有20118条数据
