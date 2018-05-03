@@ -39,7 +39,7 @@ from keras.layers import Input, Dense, TimeDistributed
 from keras.layers import LSTM
 
 # Training parameters.
-batch_size = 16
+batch_size = 32
 num_classes = 2
 epochs = 5
 
@@ -51,10 +51,14 @@ col_hidden = 64
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)
 
 # Reshapes data to 4D for Hierarchical RNN.
-img_rows, img_cols = 41, 572
+img_rows, img_cols = data_process.img_rows, data_process.img_cols
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+x_train /= 255
+x_test /= 255
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
