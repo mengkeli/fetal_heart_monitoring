@@ -2,12 +2,9 @@
 from __future__ import print_function
 
 from keras.models import Sequential
-from keras.layers import Dense, Embedding
+from keras.layers import Activation, Dense, Embedding
 from keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from math import sqrt
-import numpy as np
+from keras.layers import Dropout
 import matplotlib.pyplot as plt
 import data_process
 
@@ -25,8 +22,32 @@ model.add(LSTM(50, input_shape=(x_train.shape[1], x_train.shape[2])))
 model.add(Dense(1))
 model.compile(loss='mae', optimizer='adam')
 
+neurons = 512
+activation_function = 'tanh'
+loss = 'mse'
+optimizer="adam"
+dropout = 0.25
+batch_size = 12
+epochs = 53
+window_len = 7
+training_size = 0.8
+output_size = 1
+
+
+model = Sequential()
+model.add(LSTM(neurons, return_sequences=True, input_shape=(inputs.shape[1], inputs.shape[2]), activation=activation_function))
+model.add(Dropout(dropout))
+model.add(LSTM(neurons, return_sequences=True, activation=activation_function))
+model.add(Dropout(dropout))
+model.add(LSTM(neurons, activation=activation_function))
+model.add(Dropout(dropout))
+model.add(Dense(units=output_size))
+model.add(Activation(activation_function))
+model.compile(loss=loss, optimizer=optimizer, metrics=['mae'])
+model.summary()
+
 # fit network
-history = model.fit(x_train, y_train, epochs=50, batch_size=72, validation_data=(x_test, y_test), verbose=2, shuffle=False)
+history = model.fit(x_train, y_train, epochs=10, batch_size=32, validation_data=(x_test, y_test), verbose=2, shuffle=False)
 
 # plot history
 plt.plot(history.history['loss'], label='train')
@@ -35,19 +56,5 @@ plt.legend()
 plt.savefig('../data/lstm_history.png',bbox_inches='tight', edgecolor='white')
 plt.show()
 
-# make a prediction
-yhat = model.predict(x_test)
-x_test = x_test.reshape((x_test.shape[0], x_test.shape[2]))
-# invert scaling for forecast
-inv_yhat = np.concatenate((yhat, x_test[:, 1:]), axis=1)
-inv_yhat = MinMaxScaler.scaler.inverse_transform(inv_yhat)
-inv_yhat = inv_yhat[:, 0]
-# invert scaling for actual
-y_test = y_test.reshape((len(y_test), 1))
-inv_y = np.concatenate((y_test, x_test[:, 1:]), axis=1)
-inv_y = MinMaxScaler.scaler.inverse_transform(inv_y)
-inv_y = inv_y[:,0]
-# calculate RMSE
-rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
-print('Test RMSE: %.3f' % rmse)
+
 
