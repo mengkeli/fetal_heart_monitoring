@@ -19,7 +19,7 @@ num_classes = 2
 epochs = 10
 
 # input image dimensions
-img_rows, img_cols = 120, 2402
+img_rows, img_cols = 41, 572
 
 # the data, shuffled and split between train and test sets
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.image_file)

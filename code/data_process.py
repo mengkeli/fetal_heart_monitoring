@@ -148,6 +148,18 @@ def generate_imgdata(series_file):
         plt.savefig(img_dir + savename, bbox_inches='tight', edgecolor='white')
         plt.close('all')
 
+    img = Image.open(img_dir + '1.png')
+    h, w = img.size
+    data_mat = np.zeros((num_data, h * w), dtype=np.uint8)
+    for i in range(num_data):
+        img = Image.open(img_dir + savename)
+        img_bi = img.convert('1')  # 转化为二值化图
+        img_array = np.array(img_bi)
+        data_mat[i][:] = np.reshape(img_array, (1, h * w))
+
+    data_label_mat = np.hstack([data_mat, y])
+
+    np.save(image_file, data_label_mat)
     return
 
 def load_data(file = series_file):

@@ -11,11 +11,12 @@ from keras.layers import Dense, Dropout, Activation
 from keras.layers import Embedding
 from keras.layers import LSTM
 from keras.layers import Conv1D, MaxPooling1D
+import data_process
 from keras.datasets import imdb
 
 # Embedding
-max_features = 20000
-maxlen = 100
+max_features = 2402
+maxlen = 2402
 embedding_size = 128
 
 # Convolution
@@ -37,7 +38,7 @@ Only 2 epochs are needed as the dataset is very small.
 '''
 
 print('Loading data...')
-(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
+(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.series_smooth_file)
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
