@@ -51,11 +51,11 @@ model = Sequential()
 '''step 2 : 构建网络层
 '''
 
-model.add(Conv2D(filters=4, kernel_size=(10, 20),
-                 strides=(4, 8),
+model.add(Conv2D(filters=4, kernel_size=(3, 3),
+                 strides=(2, 2),
                  activation='relu',
                  input_shape=input_shape))
-model.add(Conv2D(8, (10, 20), activation='relu'))
+model.add(Conv2D(8, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(4, 4), strides=(1,1), padding='same'))
 model.add(Dropout(0.25))
 model.add(Flatten())
