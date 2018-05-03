@@ -17,6 +17,7 @@ from __future__ import print_function
 
 import keras
 import data_process
+import losshistory
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.layers import SimpleRNN
@@ -32,7 +33,7 @@ learning_rate = 1e-6
 clip_norm = 1.0
 
 # the data, shuffled and split between train and test sets
-(x_train, y_train), (x_test, y_test) = data_process.load_data()
+(x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.series_smooth_file)
 
 x_train = x_train.reshape(x_train.shape[0], -1, 1)
 x_test = x_test.reshape(x_test.shape[0], -1, 1)
@@ -59,12 +60,19 @@ model.compile(loss='categorical_crossentropy',
               optimizer=rmsprop,
               metrics=['accuracy'])
 
+#创建一个实例history
+history = losshistory.LossHistory()
+
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test))
+          validation_data=(x_test, y_test),
+          callbacks=[history])
 
 scores = model.evaluate(x_test, y_test, verbose=0)
 print('IRNN test score:', scores[0])
 print('IRNN test accuracy:', scores[1])
+
+#绘制acc-loss曲线
+history.loss_plot('epoch')

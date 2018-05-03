@@ -16,6 +16,8 @@ series_file = data_path + 'fetal_series_01_30.npy'
 series_smooth_file = data_path + 'fetal_series_smooth.npy'
 image_file = data_path + 'fetal_image_01_30_bold.npy'
 
+img_rows, img_cols = 177, 3362
+
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
     '''
     对于0值的点, 使用左右非零的平均值做为测量值

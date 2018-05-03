@@ -6,7 +6,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-import base
+import losshistory
 import func
 
 ######################################## init ########################################
