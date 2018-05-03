@@ -74,7 +74,7 @@ model.compile(loss=keras.losses.binary_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
-#创建一个实例history
+# create history
 history = losshistory.LossHistory()
 
 '''

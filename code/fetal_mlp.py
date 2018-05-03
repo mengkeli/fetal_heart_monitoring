@@ -10,6 +10,7 @@ from __future__ import print_function
 
 import keras
 import data_process
+import losshistory
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
@@ -48,12 +49,18 @@ model.compile(loss='categorical_crossentropy',
               optimizer=RMSprop(),
               metrics=['accuracy'])
 
-history = model.fit(x_train, y_train,
+# create history
+history = losshistory.LossHistory()
+
+model.fit(x_train, y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=2,
-                    validation_data=(x_test, y_test))
+                    validation_data=(x_test, y_test),
+                    callbacks=[history])
 score = model.evaluate(x_test, y_test, verbose=2)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+history.loss_plot('epoch')
 
