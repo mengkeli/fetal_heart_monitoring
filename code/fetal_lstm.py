@@ -22,8 +22,8 @@ import data_process
 from keras.datasets import imdb
 
 max_features = 2402
-#maxlen = 2402  # cut texts after this number of words (among top max_features most num_words=max_featurescommon words)
-batch_size = 8
+maxlen = 2402  # cut texts after this number of words (among top max_features most num_words=max_featurescommon words)
+batch_size = 32
 
 print('Loading data...')
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.series_smooth_file)
@@ -48,7 +48,7 @@ model.compile(loss='binary_crossentropy',
 print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
-          epochs=15,
+          epochs=10,
           validation_data=(x_test, y_test))
 score, acc = model.evaluate(x_test, y_test,
                             batch_size=batch_size)

@@ -9,7 +9,6 @@ Gets to 99.25% test accuracy after 12 epochs
 from __future__ import print_function
 import keras
 import data_process
-import losshistory
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -36,8 +35,8 @@ else:
 
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
-X_train /= 255
-X_test /= 255
+x_train /= 255
+x_test /= 255
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
@@ -74,9 +73,6 @@ model.compile(loss=keras.losses.binary_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
-# create history
-history = losshistory.LossHistory()
-
 '''
 step 4 : 训练
 batch_size：对总的样本数进行分组，每组包含的样本数量
@@ -102,8 +98,5 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-
-#绘制acc-loss曲线
-history.loss_plot('epoch')
 
 

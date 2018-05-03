@@ -60,9 +60,6 @@ model.compile(loss='categorical_crossentropy',
               optimizer=rmsprop,
               metrics=['accuracy'])
 
-#创建一个实例history
-history = losshistory.LossHistory()
-
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
@@ -73,6 +70,3 @@ model.fit(x_train, y_train,
 scores = model.evaluate(x_test, y_test, verbose=0)
 print('IRNN test score:', scores[0])
 print('IRNN test accuracy:', scores[1])
-
-#绘制acc-loss曲线
-history.loss_plot('epoch')
