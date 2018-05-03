@@ -236,3 +236,33 @@ numpy、scipy、matplotlib
 
 
 
+zero_rate = 0.100000
+zero_length = 20
+origin_row = 24360.
+total_row = 18237.
+bad_row = 6109.
+zero_row = 14.
+
+zero_rate = 0.100000
+zero_length = 30
+origin_row = 24360.
+total_row = 20123.
+bad_row = 4143.
+zero_row = 94.
+
+zero_rate = 0.150000
+zero_length = 30
+
+total_row = 20202.
+
+bad_row = 4143.
+zero_row = 15.
+
+
+
+zero_rate = 0.150000
+zero_length = 20
+origin_row = 24360.
+total_row = 18248.
+bad_row = 6109.
+zero_row = 3.

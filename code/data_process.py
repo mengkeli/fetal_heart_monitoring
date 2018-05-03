@@ -9,14 +9,14 @@ import seaborn as sns
 data_path = '../data/'
 
 raw_data_file = data_path + 'data_gzip.csv'
-zero_filter_file = data_path + 'data_zero_filter_01_20.csv'
+zero_filter_file = data_path + 'data_zero_filter_01_30.csv'
 label_file = data_path + 'info.csv'
 
-series_file = data_path + 'fetal_series_01_20.npy'
+series_file = data_path + 'fetal_series_01_30.npy'
 series_smooth_file = data_path + 'fetal_series_smooth.npy'
-image_file = data_path + 'fetal_image_01_20_bold.npy'
+image_file = data_path + 'fetal_image_01_30_bold.npy'
 
-def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.3, length = 100):
+def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
     '''
     对于0值的点, 使用左右非零的平均值做为测量值
     :param raw_data_file:
@@ -159,7 +159,7 @@ def load_data(file = series_file):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    filter_zero(raw_data_file, zero_filter_file, 0.1, 20)
-    # join_data_label(zero_filter_file, label_file)
+    # filter_zero(raw_data_file, zero_filter_file, 0.1, 20)
+    join_data_label(zero_filter_file, label_file)
     # generate_imgdata(series_file)
 
