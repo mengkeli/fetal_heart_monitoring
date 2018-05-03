@@ -67,10 +67,10 @@ input_shape = x_train.shape[1:]
 
 
 # If subtract pixel mean is enabled
-if subtract_pixel_mean:
-    x_train_mean = np.mean(x_train, axis=0)
-    x_train -= x_train_mean
-    x_test -= x_train_mean
+#if subtract_pixel_mean:
+#    x_train_mean = np.mean(x_train, axis=0)
+#    x_train -= x_train_mean
+#    x_test -= x_train_mean
 
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
