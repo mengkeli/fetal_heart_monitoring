@@ -1,56 +1,65 @@
-'''Trains an LSTM model on the IMDB sentiment classification task.
-
-The dataset is actually too small for LSTM to be of any advantage
-compared to simpler, much faster methods such as TF-IDF + LogReg.
-
-# Notes
-
-- RNNs are tricky. Choice of batch size is important,
-choice of loss and optimizer is critical, etc.
-Some configurations won't converge.
-
-- LSTM loss decrease patterns during training can be quite different
-from what you see with CNNs/MLPs/etc.
-'''
+# -*- coding:utf-8 -*-
 from __future__ import print_function
 
-from keras.preprocessing import sequence
 from keras.models import Sequential
 from keras.layers import Dense, Embedding
 from keras.layers import LSTM
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+import numpy as np
+import matplotlib.pyplot as plt
 import data_process
-from keras.datasets import imdb
 
-max_features = 2402
-maxlen = 2402  # cut texts after this number of words (among top max_features most num_words=max_featurescommon words)
-batch_size = 32
-
-print('Loading data...')
 (x_train, y_train), (x_test, y_test) = data_process.load_data(data_process.series_smooth_file)
-print(len(x_train), 'train sequences')
-print(len(x_test), 'test sequences')
 
-print('Pad sequences (samples x time)')
+# reshape input to be 3D [samples, timesteps, features]
+x_train = x_train.reshape((x_train.shape[0], 1, x_train.shape[1]))
+x_test = x_test.reshape((x_test.shape[0], 1, x_test.shape[1]))
 print('x_train shape:', x_train.shape)
-print('x_test shape:', x_test.shape)
+print(x_train.shape[0], 'train samples')
+print(x_test.shape[0], 'test samples')
 
-print('Build model...')
 model = Sequential()
-model.add(Embedding(max_features, 128))
-model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
-model.add(Dense(1, activation='sigmoid'))
+model.add(LSTM(50, input_shape=(x_train.shape[1], x_train.shape[2])))
+model.add(Dense(1))
+model.compile(loss='mae', optimizer='adam')
 
-# try using different optimizers and different optimizer configs
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
+# fit network
+history = model.fit(x_train, y_train, epochs=50, batch_size=72, validation_data=(x_test, y_test), verbose=2, shuffle=False)
 
-print('Train...')
-model.fit(x_train, y_train,
-          batch_size=batch_size,
-          epochs=10,
-          validation_data=(x_test, y_test))
-score, acc = model.evaluate(x_test, y_test,
-                            batch_size=batch_size)
-print('Test score:', score)
-print('Test accuracy:', acc)
+# plot history
+pyplot.plot(history.history['loss'], label='train')
+pyplot.plot(history.history['val_loss'], label='test')
+pyplot.legend()
+pyplot.show()
+
+# design network
+model = Sequential()
+model.add(LSTM(50, input_shape=(x_train.shape[1], x_train.shape[2])))
+model.add(Dense(1))
+model.compile(loss='mae', optimizer='adam')
+# fit network
+history = model.fit(x_train, train_y, epochs=50, batch_size=72, validation_data=(x_test, y_test), verbose=2, shuffle=False)
+# plot history
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show()
+
+# make a prediction
+yhat = model.predict(x_test)
+x_test = x_test.reshape((x_test.shape[0], x_test.shape[2]))
+# invert scaling for forecast
+inv_yhat = np.concatenate((yhat, x_test[:, 1:]), axis=1)
+inv_yhat = MinMaxScaler.scaler.inverse_transform(inv_yhat)
+inv_yhat = inv_yhat[:,0]
+# invert scaling for actual
+y_test = y_test.reshape((len(y_test), 1))
+inv_y = np.concatenate((y_test, x_test[:, 1:]), axis=1)
+inv_y = MinMaxScaler.scaler.inverse_transform(inv_y)
+inv_y = inv_y[:,0]
+# calculate RMSE
+rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
+print('Test RMSE: %.3f' % rmse)
+
