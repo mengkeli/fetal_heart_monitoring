@@ -16,7 +16,7 @@ series_file = data_path + 'fetal_series_01_30.npy'
 series_smooth_file = data_path + 'fetal_series_smooth.npy'
 image_file = data_path + 'fetal_image_01_30_bold.npy'
 
-img_rows, img_cols = 177, 3362
+img_rows, img_cols = 68, 1688
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
     '''
