@@ -9,10 +9,13 @@ Gets to 99.25% test accuracy after 12 epochs
 from __future__ import print_function
 import keras
 import data_process
+import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
+from keras.callbacks import Callback
+from sklearn.metrics import f1_score, precision_score, recall_score
 
 batch_size = 128
 num_classes = 2
@@ -81,13 +84,12 @@ shuffle：是否把数据随机打乱之后再进行训练
 validation_split：拿出百分之多少用来做交叉验证
 verbose：屏显模式 0：不输出  1：输出进度  2：输出每次的训练结果
 '''
-model.fit(x_train, y_train,
+history = model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=2,
           shuffle=True,
-          validation_data=(x_test, y_test),
-          callbacks=[history])
+          validation_data=(x_test, y_test))
 
 model.summary()
 
@@ -98,5 +100,11 @@ print("test set")
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.savefig('../data/lstm_history.png', bbox_inches='tight', edgecolor='white')
+plt.show()
 
 

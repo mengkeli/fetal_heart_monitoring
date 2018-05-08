@@ -14,9 +14,10 @@ features = ['jixian', 'jixianbianyi', 'taidongjiasutime', 'taidongjiasufudu', 't
 train = info[features].fillna(0).as_matrix()
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(train, labels, test_size=0.2)
-
+from sklearn.cross_validation import StratifiedKFold
+cv = StratifiedKFold(y, n_folds=6)
 # svm
-clf = svm.SVC(kernel='linear')
+clf = svm.SVC(kernel='rbf', C=1000, gamma=1e-4, verbose=0)
 clf.fit(X_train, y_train)
 print clf.score(X_test, y_test)
 

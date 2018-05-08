@@ -14,9 +14,12 @@ label_file = data_path + 'info.csv'
 
 series_file = data_path + 'fetal_series_01_30.npy'
 series_smooth_file = data_path + 'fetal_series_smooth.npy'
-image_file = data_path + 'fetal_image_01_30_bold.npy'
+image_file = data_path + 'fetal_image_01_30.npy'
 
-img_rows, img_cols = 68, 1688
+img_rows, img_cols = 41, 851
+# 68, 1688 ->25K
+# 41, 572 -> 7K
+# 177, 3362 -> 50K
 
 def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
     '''
@@ -83,6 +86,12 @@ def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
                         right_index += 1
 
                     val = np.floor_divide(int(values[left_index]) + int(values[right_index]), 2)
+                    if (abs(val - int(values[left_index])) > 10):
+                        if i != 0:
+                            val = int(values[left_index]) - 10
+                        else:
+                            val = int(values[right_index]) - 10
+                    values[i] = val
                 else:
                     val = values[i]
                 writer.write(',' + str(val))
@@ -128,15 +137,28 @@ def join_data_label(zero_filter_file, label_file):
 
 def generate_imgdata(series_file):
     '''
-    生成与时间序列对应的图像数据,并进行平滑处理 1 * 2402 -> h, w = 177, 3362
+    生成与时间序列对应的图像数据,并进行平滑处理 120 * 2402 -> 
     :param path:
     :return:
     '''
     f = np.load(series_file)
     x, y = f[:, 0:-1], f[:, -1:]
     num_data = x.shape[0]
-    img_dir = data_path + 'smooth/'
+    cols = x.shape[1]
+    rows = 200 - 80  # 图像的y轴刻度
+    data_mat = np.zeros((num_data, rows * cols), dtype=np.uint8)
 
+    for i in range(num_data):
+        if (i % 1000 == 0):
+            print('i = %s' % i)
+        image_mat = np.zeros((rows, cols), dtype=np.uint8)
+        for j in range(cols):
+            image_mat[x[i][j] - 80][j] = 1
+        data_mat[i][:] = np.reshape(image_mat, (1, rows * cols))
+    data_label_mat = np.hstack([data_mat, y])
+    # data_mat_df = pd.DataFrame(data_label_mat)
+
+    np.save(image_file, data_label_mat)
     return
 
 def load_data(file = series_file):

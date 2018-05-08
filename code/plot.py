@@ -2,12 +2,11 @@
 
 import numpy as np
 import pandas as pd
+import base
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-import losshistory
-import func
 
 ######################################## init ########################################
 plt.style.use('ggplot')  # Good looking plots
@@ -21,36 +20,32 @@ pd.set_option('expand_frame_repr', False)
 pd.set_option('precision', 6)
 
 
-# 平滑处理
 
-# 画图，保存
-
-
-# def plot(list, savename):
-#     '''
-#     绘图
-#     :param list: 所有文件的数据
-#     :param savename: 保存的文件名
-#     :return:
-#     '''
-#     plt.rcParams['figure.figsize'] = [25, len(list) * 5]
-#     j = 1
-#     for i in list:
-#         X, y, file = i
-#         plt.subplot(len(list), 1, j)
-#         plt.plot(X, y, '-')
-#         plt.minorticks_on()
-#         plt.grid(True, which='both')
-#         plt.title(file)
-#         j += 1
-#     plt.savefig(base.plot_dir + savename)
+def plot(list, savename):
+    '''
+    绘图
+    :param list: 所有文件的数据
+    :param savename: 保存的文件名
+    :return:
+    '''
+    plt.rcParams['figure.figsize'] = [25, len(list) * 5]
+    j = 1
+    for i in list:
+        X, y, file = i
+        plt.subplot(len(list), 1, j)
+        plt.plot(X, y, '-')
+        plt.minorticks_on()
+        plt.grid(True, which='both')
+        plt.title(file)
+        j += 1
+    plt.savefig(base.plot_dir + savename)
 
 
 # original_list = func.load_files(base.data_dir)
 # filter_zero_list = func.load_files_filter_zero(base.data_dir)
 # mean_per_second_list = func.load_files_mean_per_second(base.data_dir)
 # mean_per_second_filter_zero_list = func.load_files_mean_per_second_filter_zero(base.data_dir)
-# plot(original_list, 'original_plot.pdf')
+plot(original_list, 'original_plot.pdf')
 # plot(filter_zero_list, 'filter_zero_plot.pdf')
 # plot(mean_per_second_list, 'mean_per_second_plot.pdf')
 # plot(mean_per_second_filter_zero_list, 'mean_per_second_filter_zero_plot.pdf')

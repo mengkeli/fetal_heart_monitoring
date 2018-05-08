@@ -1,6 +1,47 @@
 # FHR - record
 
-##batch_size 设置
+## SVM
+
+```
+Best parameters set found on development set:
+()
+{'kernel': 'rbf', 'C': 1000, 'gamma': 0.0001}
+()
+Grid scores on development set:
+()
+0.381 (+/-0.107) for {'kernel': 'rbf', 'C': 1, 'gamma': 0.001}
+0.382 (+/-0.107) for {'kernel': 'rbf', 'C': 1, 'gamma': 0.0001}
+0.393 (+/-0.103) for {'kernel': 'rbf', 'C': 10, 'gamma': 0.001}
+0.396 (+/-0.090) for {'kernel': 'rbf', 'C': 10, 'gamma': 0.0001}
+0.398 (+/-0.135) for {'kernel': 'rbf', 'C': 100, 'gamma': 0.001}
+0.410 (+/-0.106) for {'kernel': 'rbf', 'C': 100, 'gamma': 0.0001}
+0.353 (+/-0.114) for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.001}
+0.419 (+/-0.097) for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.0001}
+()
+Detailed classification report:
+()
+The model is trained on the full development set.
+The scores are computed on the full evaluation set.
+()
+             precision    recall  f1-score   support
+
+          1       0.83      0.89      0.86      5612
+          2       0.83      0.75      0.79      4002
+          3       0.00      0.00      0.00         9
+          4       0.33      0.10      0.15        31
+          5       0.00      0.00      0.00         2
+
+avg / total       0.83      0.83      0.83      9656
+
+```
+
+
+
+## RF
+
+## CNN
+
+###batch_size 设置
 
 - batch_size = 1时，随机梯度下降，梯度容易抵消，算法在一定epoches内不收敛
 - 随着 batch_size 增大，处理相同数据量的速度越快。
@@ -8,23 +49,11 @@
 - 由于上述两种因素的矛盾， Batch_Size 增大到**某个**时候，达到**时间上**的最优。
 - 由于最终收敛精度会陷入不同的局部极值，因此 Batch_Size 增大到**某些**时候，达到最终收敛**精度上**的最优。
 - 一般设为2的倍数，这样每个batch的数据刚好能塞进内存里，便于并行计算
-##epoch设置
+###epoch设置
 
 一个epoch 就是指数据集里所有数据全训练一遍
 
 epoch太大，缺点有两个…一个是过拟合（overfit）另一个是训练时间太长
-
-## Convolution层
-
-
-
-
-
-## Pooling层
-
-kernel_size：
-
-
 
 ## 网络结构
 
@@ -132,7 +161,79 @@ model.add(Flatten()) # 20180402_1
 | 13       |           |          |          |         | 0.5-0.50.4-0.25 | 0.8037    | 0.7817   |
 |          |           |          |          |         |                 |           |          |
 
+| 20180504 | filters           | kernel  | pool | strides | Drop_out | train_err | Test_err |
+| :------- | ----------------- | ------- | ---- | ------- | -------- | --------- | -------- |
+| 1        | 4-8               | 3–3     | 4    | 2-1     | 0.25-0.2 | 0.6035    | 0.6021   |
+| 2        | 4-8               | 3–3     | 4    | 1-1     | 0.25-0.2 | 0.6035    | 0.6021   |
+| 3        | 32-32-32-32       | 3-3-3-3 | 2    | 2       | 0.25-0.2 | 0.9556    | 0.6608   |
+| 4        |                   |         |      |         |          | 0.8596    | 0.6622   |
+| 5        | 32-32-32-32-32-32 |         |      |         |          | 0.7416    | 0.6888   |
 
+| 20180505 | filters               | kernel               | pool               | strides | Drop_out            | train_err | Test_err |
+| -------- | --------------------- | -------------------- | ------------------ | ------- | ------------------- | --------- | -------- |
+| 1        | 4-8                   | (10,20)strides=(4,8) | (4,4)strides=(1,1) |         | 0.25-0.2            | 0.8599    | 0.7962   |
+| 2        | 8-8-8                 |                      |                    |         | 0.25-0.2            | 0.8232    | 0.8009   |
+| 3        | 8-8-8-8               |                      |                    |         | 0.25-0.25-0.2       | 0.8380    | 0.7852   |
+| 4        |                       |                      |                    |         | 0.3-0.3-0.3         | 0.8399    | 0.7793   |
+| 5        |                       |                      |                    |         | 0.3-0.3-0.3-0.3-0.3 | 0.8616    | 0.7935   |
+| 6        |                       |                      |                    |         |                     | 0.9221    | 0.7711   |
+| 7        |                       |                      |                    |         | 在加两个0.1dropout  | 0.8718    | 0.7852   |
+| 8        | padding=same          |                      |                    |         |                     | 0.8840    | 0.7927   |
+| 9        | 8-8-8-8-16-16         |                      |                    | (4,4)   |                     | 0.8974    | 0.7840   |
+| 10       | 4-4-8-8               | (10,20)strides=(4,4) | (4,4)strides=(2,2) |         |                     | 0.8704    | 0.7910   |
+| 11       | 4-4-8-8-16-16         |                      |                    |         |                     | 0.8661    | 0.7980   |
+| 12       | 4-4-8-8-16-16         | (10,10)strides=(4,4) |                    |         |                     | 0.8516    | 0.8054   |
+| 13       | 8-8-16-16-32-32       | (11,11)strides=(4,4) | (2,2)strides=(2,2) |         |                     |           |          |
+| 14       | 8-8-16-16-32-32       |                      |                    |         |                     | 0.9369    | 0.7763   |
+| 15       | 8-8-16-16-32-32-64-64 |                      |                    |         |                     | 0.9146    | 0.7952   |
+
+kernel=(11,11),strides=(2,2)的时候时间为76s一个epoch，（4,4）的时候是29s
+
+kernel=(3,3)*5,strides=(4,4)时间为28s。节省了1s的时间
+
+14在13的基础上加了1*1卷积核
+
+
+
+```python
+model.add(Conv2D(8, (11, 11), strides=(4, 4),input_shape=input_shape, activation='relu', padding='same'))
+model.add(Dropout(0.1))
+model.add(Conv2D(8, (11, 11), activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(4, 4), padding='same'))
+model.add(Dropout(0.3))
+
+model.add(Conv2D(16, (11, 11), activation='relu', padding='same'))
+model.add(Dropout(0.1))
+model.add(Conv2D(16, (11, 11), activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(4, 4), padding='same'))
+model.add(Dropout(0.3))
+
+model.add(Conv2D(32, (11, 11), activation='relu', padding='same'))
+model.add(Dropout(0.1))
+model.add(Conv2D(32, (11, 11), activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(4, 4), padding='same'))
+model.add(Dropout(0.3))
+
+model.add(Conv2D(64, (11, 11), activation='relu', padding='same'))
+model.add(Dropout(0.1))
+model.add(Conv2D(64, (11, 11), activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(4, 4), padding='same'))
+model.add(Dropout(0.3))
+
+model.add(Flatten())
+model.add(Dropout(0.3))
+model.add(Dense(num_classes, activation='softmax')) 
+```
+
+
+
+| 20180507 | filters                     | kernel               | pool               | strides | Drop_out | train_err | Test_err |
+| -------- | --------------------------- | -------------------- | ------------------ | ------- | -------- | --------- | -------- |
+| 1        | 8-8-16-16-32-32-64-64       | (11,11)strides=(4,4) | (2,2)strides=(2,2) |         | 0.5      | 0.8648    | 0.8072   |
+| 2        |                             |                      | (4,4)              |         | 0.3      | 0.8987    | 0.8009   |
+| 3        | 8-8-16-16-32-32-64-64       |                      |                    |         | 0.25-0.2 | 0.8741    | 0.8034   |
+| 4        | 8-8-16-16-32-32-32-32-64-64 |                      |                    |         |          | 0.8342    | 0.8168   |
+| 5        | 32-32-32-32-32-32           |                      |                    |         |          | 0.7416    | 0.6888   |
 
 
 ###fetal_mlp.py
@@ -188,9 +289,73 @@ model.add(Dense(num_classes, activation='softmax'))
 | 20180330 | batch |      |      |      |      |      | Train_err | test_err |
 | -------- | ----- | ---- | ---- | ---- | ---- | ---- | --------- | -------- |
 | 1        | 16    |      |      |      |      |      |           | 0.7398   |
-| 2        |       |      |      |      |      |      |           |          |
-| 3        |       |      |      |      |      |      |           |          |
-| 4        |       |      |      |      |      |      |           |          |
+
+| 20180505 | filters | kernel | pool | strides | Drop_out | train_err | Test_err |
+| -------- | ------- | ------ | ---- | ------- | -------- | --------- | -------- |
+| 1        | 4-8     | 3–3    | 4    | 2-1     | 0.25-0.2 | 0.6035    | 0.6953   |
+
+### fetal_vgg.py
+
+```python
+model.add(Conv2D(32, (3, 3), strides=(2, 2), activation='relu', input_shape=(img_rows, img_cols, 1)))
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+```
+
+1. val_acc = 0.6593， train_acc = 0.7997
+
+
+2. Dense层256改成512之后：val_acc = 0.6789， train_acc = 0.7784
+3. Dense层512改成1024之后：val_acc = 0.6699， train_acc = 0.8158
+
+**取Dense层512**
+
+4.drop_out由0.25改为0.3：val_acc = 0.6874， train_acc = 0.8201
+
+5.取消第一层strides：val_acc = 0.6647， train_acc = 0.8261
+
+
+
+## LSTM
+
+```python
+model = Sequential()
+model.add(LSTM(1024, input_shape=(x_train.shape[1], x_train.shape[2]), return_sequences=True, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(LSTM(512, return_sequences=True))
+# model.add(Dropout(0.2))
+model.add(LSTM(256, return_sequences=False))
+# model.add(Dropout(0.2))
+# model.add(Dense(units=output_size))
+# model.add(Activation('tanh'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+model.summary()
+```
+
+1. acc：0.6118
+
+```
+model.add(LSTM(HIDDEN_LAYER_SIZE, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(1))
+model.add(Activation("sigmoid"))
+model.compile(loss="binary_crossentropy", optimizer="adam",metrics=["accuracy"])
+```
+
 
 
 
@@ -207,28 +372,7 @@ model.add(Dense(num_classes, activation='softmax'))
 
 numpy、scipy、matplotlib
 
-插值：
 
-1. nearest 最近邻插值法
-2. zero： 阶梯插值
-3.  slinear：线性插值
-4. quadratic、cubic：2、3阶B样条曲线插值
-
-拟合和插值的区别：
-
-简单来说，插值就是根据原有数据进行填充，最后生成的曲线一定过原有点。
-
-拟合是通过原有数据，调整曲线系数，使得曲线与已知点集的差别（最小二乘）最小，最后生成的曲线不一定经过原有点。
-
-- 20180422
-
-（1）对胎心率信号曲线进行缺失值统计，比例大于阈值的样本被剔除；
-
-（2）对胎心率信号曲线进行断点检测，连续断点数超过阈值的样本被剔除；50
-
-（3）对胎心率信号曲线进行线性插值缺失值修补；
-
-（4）对胎心率信号曲线进行降噪（任何连续5次低于10 bpm的心率都被视为稳定心率。然后，每当相邻心率之间的差异高于25 bpm时，样本将通过之前心率与新稳定心率之间的线性插值进行取代。），将数据值控制在合理范围内。
 
 展示用图的标准尺寸为300*30
 
