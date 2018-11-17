@@ -26,19 +26,27 @@
 ## 思路
 
 - [x] 将零值用整体平均值替代，效果不好
-- [x] 发现很多零都是连续的，用零两端的平均值作为替代，效果不好
+- [ ] 发现很多零都是连续的，用零两端的平均值作为替代，效果不好
 - [ ] 用朴素贝叶斯方法来处理零值
 - [ ] 用KNN来对于缺失的点，找到与其类似的记录的点在缺失的时候的历史发生情况
 
 ## 神经网络
-- `fetal_cnn.py` 卷积神经网络
-- `fetal_mlp.py` 多层感知机
+- `fetal_MKNet.py` 基于卷积神经网络的算法MKNet
+- `fetal_lstm.py` 基于循环神经网络的算法MKRNN
 
 ## 代码说明
 
+- `code/func.py` 数据读取、处理的基本函数
 - `code/import.py` 将数据库中的数据导出成csv文件
+- `code/data_transformation.py` 将csv文件中数据转化为特征
+- `code/data_process.py` 数据预处理（数据清洗、去噪等）
+- `code/data_operations.ipynb` 对数据进行的部分单独操作
 - `code/svm.py` 基于所有的y以及info中某些字段的svm
-- `run.sh` 执行输入导入、训练全过程
+- `code/rf.py` 基于所有的y以及info中某些字段的rf
+- `code/SVM.ipynb` 用网格搜索寻找SVM最佳超参数，训练SVM，画ROC曲线
+- `code/RF.ipynb` 用网格搜索寻找RF最佳超参数，训练RF，画ROC曲线
+- `code/NN_ROC.ipynb` 画神经网络模型的ROC曲线
+- `code/model_structure.ipynb` 画神经网络模型的结构图
 
 ## 运行说明
 1. 克隆代码
@@ -54,17 +62,8 @@
   `data_zero_filer_03_50.csv` 剔除零值超过30%的，连续零值超过50个，剩余22199条，bad_row = 2158， zero_row = 3
 
 
-3. `code/svm.py`为所有特征的`svm`, 目前正确率不是很高, 期待大家的调参结果
+3. `http://lark:8885/`用jupyter notebook运行代码
 
 ## Evaluation
 See `doc/evaluation.xlsx`
-
-## Reference
-- [MemN2N](https://github.com/priyank87/memn2n)
-- [Python轻量级web框架Flask文档](http://flask.pocoo.org/)
-
-## 代码目录说明
-```
-TODO: 待整理
-```
 

@@ -20,7 +20,6 @@ pd.set_option('expand_frame_repr', False)
 pd.set_option('precision', 6)
 
 
-
 def plot(list, savename):
     '''
     绘图

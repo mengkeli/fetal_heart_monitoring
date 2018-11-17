@@ -63,14 +63,14 @@ def filter_zero(raw_data_file, zero_filter_file, zero_rate = 0.1, length = 30):
                         cons_zero_count = 0
             zero_writer.write('%s,%d\n' % (values[0], zero_count))
             # 连续0值超过length的, 剔除
-            if bad_row_flag == True:
-                bad_row += 1
-                continue
+          #  if bad_row_flag == True:
+          #      bad_row += 1
+          #      continue
 
             # 0值缺失严重的, 剔除
-            if zero_count >= zero_rate * 2400:
-                zero_row += 1
-                continue
+          #  if zero_count >= zero_rate * 2400:
+          #      zero_row += 1
+          #      continue
   
             total_row += 1
             writer.write(values[0])
@@ -183,7 +183,7 @@ def load_data(file = series_file):
     return (x_train, y_train), (x_test, y_test)
 
 if __name__ == '__main__':
-    # filter_zero(raw_data_file, zero_filter_file, 0.1, 20)
-    join_data_label(zero_filter_file, label_file)
-    # generate_imgdata(series_file)
+    # filter_zero(raw_data_file, zero_filter_file, 0.1, 30)
+    # join_data_label(zero_filter_file, label_file)
+    generate_imgdata(series_file)
 
